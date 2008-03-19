@@ -1,0 +1,163 @@
+#LyX 1.5.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 276
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+
+\end_preamble
+\language spanish
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\paperfontsize default
+\spacing single
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\leftmargin 3cm
+\topmargin 3cm
+\rightmargin 3cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+El problema del viajante de comercio
+\end_layout
+
+\begin_layout Author
+Vicente J.
+ Ferrer Dalmau (43152879A)
+\newline
+<vicente@jdalmau.es>
+\end_layout
+
+\begin_layout Abstract
+Tercera práctica del itinerario 1 de la asignatura Inteligencia Artificial
+ correspondiente al año académico 2007/2008.
+\end_layout
+
+\begin_layout Standard
+
+\lyxline
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\newpage
+
+\end_layout
+
+\begin_layout Section
+Enunciado
+\end_layout
+
+\begin_layout Standard
+Un señor viajante de comercio debe visitar n ciudades en su trabajo diario
+ 
+\begin_inset Formula $c_{1},c_{2},...c_{n}$
+\end_inset
+
+ de manera que una de ellas, la ciudad 
+\begin_inset Formula $c_{i}$
+\end_inset
+
+, constituye el punto de partida y llegada del camino a seguir en la visita.
+ Se considera que existen rutas directas entre cada par de ciudades del
+ conjunto considerado, de manera que cada ruta tiene un costo específico
+ asociado.
+ El problema consiste en determinar, partiendo y llegando a una misma ciudad
+ 
+\begin_inset Formula $c_{i}$
+\end_inset
+
+, una ruta óptima que permita visitar las n ciudades consideradas en un
+ tiempo mínimo.
+ El mencionado problema debe resolverse aplicando cada una de las siguientes
+ técnicas:
+\newline
+
+\newline
+TÉCNICAS DE BÚSQUEDA NO INFORMADA
+\end_layout
+
+\begin_layout Itemize
+Primero en profundidad.
+\end_layout
+
+\begin_layout Itemize
+Primero en profundidad con ramificación y poda.
+\end_layout
+
+\begin_layout Itemize
+Búsqueda de costo uniforme.
+\end_layout
+
+\begin_layout Standard
+TÉCNICAS DE BÚSQUEDA INFORMADA
+\end_layout
+
+\begin_layout Itemize
+El vecino más próximo.
+\end_layout
+
+\begin_layout Itemize
+Búsqueda A*, en la que debe diseñarse –como mínimo- una heurística haciendo
+ uso de la técnica del problema relajado, para calcular la función h’.
+\end_layout
+
+\begin_layout Standard
+Debe hacerse un análisis de cada una de las técnicas empleadas, determinando
+ los casos en que cada técnica funciona mejor/peor; asimismo, deben compararse
+ las diferentes técnicas, concluyendo sobre las ventajas de cada una respecto
+ a las demás.
+ 
+\end_layout
+
+\begin_layout Standard
+Respecto a la búsqueda A*, debe diseñarse al menos una heurística para el
+ cálculo de h’, utilizando para ello la técnica del problema relajado.
+ 
+\end_layout
+
+\begin_layout Standard
+Se valorará la capacidad de iniciativa de los estudiantes además de la presentac
+ión de los resultados y la calidad del análisis de cada técnica.
+\end_layout
+
+\end_body
+\end_document
