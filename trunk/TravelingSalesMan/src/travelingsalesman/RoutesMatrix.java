@@ -66,6 +66,14 @@ public class RoutesMatrix {
     }
     
     /**
+     * sets the cost of going from city "a" to city "b"
+     */
+    public void setCost(int a, int b, int cost) {
+        
+        theMatrix[a][b] = cost;
+    }
+    
+    /**
      * gets the array of costs as an Object[][] array.
      */
     public Object[][] getCosts () {
@@ -89,7 +97,15 @@ public class RoutesMatrix {
             array[i] = i;
         }
         return array;
-    } 
+    }
+    
+    /**
+     * gets the maximum distance between two cities.
+     */
+    public int getMaxDistance() {
+        
+        return MAXDISTANCE;
+    }
     
     public String toString() {
         

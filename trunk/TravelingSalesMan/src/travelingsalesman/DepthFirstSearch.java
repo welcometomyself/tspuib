@@ -54,7 +54,7 @@ public class DepthFirstSearch {
         
         result += "\nBetter solution: "+optimumRoute.toString() + "// Cost: "+optimumCost+"\n";
         result += "Visited Nodes: "+nodes+"\n";
-        result += "Elapsed Time: "+(endTime-startTime)+"\n";
+        result += "Elapsed Time: "+(endTime-startTime)+" ms\n";
         
         return result;         
     }
@@ -81,6 +81,9 @@ public class DepthFirstSearch {
             }
             
             result += followedRoute.toString() + "// Cost: "+routeCost + "\n";
+            
+            // update the route's cost (back to the previous value)
+            routeCost -= distances.getCost(from, sourceCity);
         }
         else {
             for (int to=0; to<distances.getCitiesCount(); to++){
