@@ -131,6 +131,11 @@ public class Main extends javax.swing.JFrame {
         });
 
         jButton2.setText("Ramificaci\u00f3n y poda");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
 
         jButton3.setText("Costo uniforme");
 
@@ -233,6 +238,12 @@ public class Main extends javax.swing.JFrame {
         );
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+
+        BranchAndBound s = new BranchAndBound(routes, 0);
+        jTextArea1.setText(s.execute());
+    }//GEN-LAST:event_jButton2MouseClicked
 
     private void jButton7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseClicked
 
