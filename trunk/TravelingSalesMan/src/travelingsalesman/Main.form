@@ -98,9 +98,6 @@
               <SerializedValue value="-84,-19,0,5,115,114,0,55,106,97,118,97,120,46,115,119,105,110,103,46,112,108,97,102,46,66,111,114,100,101,114,85,73,82,101,115,111,117,114,99,101,36,66,101,118,101,108,66,111,114,100,101,114,85,73,82,101,115,111,117,114,99,101,-18,76,92,127,-89,-74,65,102,2,0,0,120,114,0,30,106,97,118,97,120,46,115,119,105,110,103,46,98,111,114,100,101,114,46,66,101,118,101,108,66,111,114,100,101,114,-15,-93,37,-125,85,-77,-82,100,2,0,5,73,0,9,98,101,118,101,108,84,121,112,101,76,0,14,104,105,103,104,108,105,103,104,116,73,110,110,101,114,116,0,16,76,106,97,118,97,47,97,119,116,47,67,111,108,111,114,59,76,0,14,104,105,103,104,108,105,103,104,116,79,117,116,101,114,113,0,126,0,2,76,0,11,115,104,97,100,111,119,73,110,110,101,114,113,0,126,0,2,76,0,11,115,104,97,100,111,119,79,117,116,101,114,113,0,126,0,2,120,114,0,33,106,97,118,97,120,46,115,119,105,110,103,46,98,111,114,100,101,114,46,65,98,115,116,114,97,99,116,66,111,114,100,101,114,-99,92,-94,-101,106,-10,-127,51,2,0,0,120,112,0,0,0,1,112,112,112,112"/>
             </Property>
             <Property name="horizontalScrollBarPolicy" type="int" value="32"/>
-            <Property name="horizontalScrollBar" type="javax.swing.JScrollBar" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="default"/>
-            </Property>
           </Properties>
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -225,6 +222,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Costo uniforme"/>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jButton3MouseClicked"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
