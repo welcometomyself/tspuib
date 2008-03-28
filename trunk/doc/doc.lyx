@@ -136,6 +136,10 @@ El vecino más próximo.
 \end_layout
 
 \begin_layout Itemize
+Método de escalada.
+\end_layout
+
+\begin_layout Itemize
 Búsqueda A*, en la que debe diseñarse –como mínimo- una heurística haciendo
  uso de la técnica del problema relajado, para calcular la función h’.
 \end_layout

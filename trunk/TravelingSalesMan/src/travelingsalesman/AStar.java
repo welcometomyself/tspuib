@@ -1,12 +1,12 @@
 /*
- * UniformCost.java
+ * AStar.java
  *
  * $LastChangedDate$
  * $LastChangedRevision$
  * Vicente J. Ferrer Dalmau
  * < vicente@jdalmau.es >
  *
- * Implementation of the Uniform Cost algorithm.
+ * Implementation of the A* (A Star) algorithm.
  */
 
 package travelingsalesman;
@@ -19,14 +19,14 @@ import java.util.PriorityQueue;
  *
  * @author Vicente J. Ferrer Dalmau
  */
-public class UniformCost {
+public class AStar {
     
     RoutesMatrix distances;
     int sourceCity;
-    PriorityQueue<Town> toExpand = new PriorityQueue<Town>(200, 
+    PriorityQueue<Town> opened = new PriorityQueue<Town>(200, 
         new Comparator<Town>() {
           public int compare(Town a, Town b) {
-            return a.g - b.g;
+            return a.f - b.f;
           }
         }
       );  
@@ -35,20 +35,33 @@ public class UniformCost {
     ArrayList optimumRoute, followedRoute;
     int nodes = 0;
     int routeCost = 0;
-    int optimumCost = Integer.MAX_VALUE;      
+    int optimumCost = Integer.MAX_VALUE;     
     
-    /** Creates a new instance of UniformCost */
-    public UniformCost(RoutesMatrix matrix, int sourceCity) {
+    // Estimation of the cost between two cities, it can overestimate the real value (h' > h),
+    // so the algorithm it's not optimum.
+    int HEURISTICCONSTANT = 15;
+    
+    /**
+     * Gets the heuristic value for a given depth
+     * The level 0 has the maximum value.
+     */
+    private int getHeuristicValue (int level) {
+        
+        return HEURISTICCONSTANT * (distances.getCitiesCount() - level);
+    }
+    
+    /** Creates a new instance of AStar */
+    public AStar(RoutesMatrix matrix, int sourceCity) {
         
         distances = matrix;
-        this.sourceCity = sourceCity;
+        this.sourceCity = sourceCity;        
     }
     
     /**
      * executes the algorithm
      */
     public String execute() {
-        
+
         // have we found the solution?
         boolean solution = false;
         
@@ -56,16 +69,13 @@ public class UniformCost {
         long startTime = System.currentTimeMillis();
         
         // initial town
-        toExpand.add(new Town(sourceCity, 0, 0, 0));
+        opened.add(new Town(sourceCity, 0, getHeuristicValue(0), 0));
         
-        while (!toExpand.isEmpty() && !solution) {
+        while (!opened.isEmpty() && !solution) {
             // gets the city with lower g value
-            Town currentTown = toExpand.poll();
+            Town currentTown = opened.poll();
             nodes++;
-            //System.out.println("selected node: "+currentTown.number+" with g = "+currentTown.g);
 
-            // TODO: It could be in Town class ... so it wouldn't need to be computed
-            // every time ...
             // rebuild the followed route for the selected town
             Town aux = currentTown;
             followedRoute = new ArrayList();
@@ -73,7 +83,6 @@ public class UniformCost {
             while (aux.level != 0) {
                 aux = aux.parent;
                 followedRoute.add(aux.number);
-                //System.out.println("the level of city "+aux.number+" is not zero");
             }
             
             if (currentTown.level == distances.getCitiesCount()) {
@@ -87,29 +96,23 @@ public class UniformCost {
                     boolean visited = followedRoute.contains(i);
                     boolean isSolution = (followedRoute.size() == distances.getCitiesCount())&&(i == sourceCity);
 
-                    /*
-                    System.out.println("candidate child node: "+i);
-                    System.out.println("visited = "+visited);
-                    System.out.println("isSolution = "+isSolution);
-                     */
-
                     if (!visited || isSolution) {
-                        Town childTown = new Town(i, currentTown.g + distances.getCost(currentTown.number, i), 0, currentTown.level + 1);
-                        //System.out.println("selected child town: "+childTown.number);
+                        Town childTown = new Town(i, currentTown.g + distances.getCost(currentTown.number, i), 
+                                getHeuristicValue(currentTown.level + 1), currentTown.level + 1);
                         childTown.parent = currentTown;
-                        toExpand.add(childTown);  
+                        opened.add(childTown);  
                     }
                 }                
             }
         }
         long endTime = System.currentTimeMillis();
         
-        result =  "UNIFORM COST SEARCH\n\n";     
+        result =  "A STAR SEARCH\n\n";     
         result += "Better solution: "+optimumRoute.toString() + "// Cost: "+optimumCost+"\n";
         result += "Visited Nodes: "+nodes+"\n";
         result += "Elapsed Time: "+(endTime-startTime)+" ms\n";
         
-        return result;
-    }
+        return result;        
+    }    
     
 }
