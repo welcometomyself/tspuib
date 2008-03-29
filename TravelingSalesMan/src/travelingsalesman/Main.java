@@ -169,6 +169,11 @@ public class Main extends javax.swing.JFrame {
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("B\u00fasqueda Informada"));
         jButton4.setText("Vecino m\u00e1s pr\u00f3ximo");
+        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton4MouseClicked(evt);
+            }
+        });
 
         jButton5.setText("A*");
         jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -253,6 +258,12 @@ public class Main extends javax.swing.JFrame {
         );
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
+
+        NearestNeighbour s = new NearestNeighbour(routes, 0);
+        jTextArea1.setText(s.execute());
+    }//GEN-LAST:event_jButton4MouseClicked
 
     private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
 

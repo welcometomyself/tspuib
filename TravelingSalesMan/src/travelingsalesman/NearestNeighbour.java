@@ -67,7 +67,7 @@ public class NearestNeighbour {
         while (nodes != distances.getCitiesCount()) {
             // choose the closest town
             int lowestDistance = Integer.MAX_VALUE;
-            int chosen;
+            int chosen = -1;
             for (int i=0; i < distances.getCitiesCount(); i++) {
                 if (!followedRoute.contains(i)) {
                     int tempDistance = distances.getCost(currentTown, i);
@@ -78,48 +78,13 @@ public class NearestNeighbour {
                 }
             }
             routeCost += distances.getCost(currentTown, chosen);
-        }
-        /*
-        
-        // we've found a new solution
-        if (followedRoute.size() == distances.getCitiesCount()) {
-            
-            followedRoute.add(sourceCity);
+            followedRoute.add(chosen);
+            currentTown = chosen;
             nodes++;
-            
-            // update the route's cost
-            routeCost += distances.getCost(from, sourceCity);
-            
-            if (routeCost < optimumCost) {
-                optimumCost = routeCost;
-                optimumRoute = (ArrayList)followedRoute.clone();
-            }
-            
-            result += followedRoute.toString() + "// Cost: "+routeCost + "\n";
-            
-            // update the route's cost (back to the previous value)
-            routeCost -= distances.getCost(from, sourceCity);
         }
-        else {
-            for (int to=0; to<distances.getCitiesCount(); to++){
-                if (!followedRoute.contains(to)) {
-                    
-                    ArrayList increasedRoute = (ArrayList)followedRoute.clone();
-                    increasedRoute.add(to);
-                    nodes++;
-                    
-                    // update the route's cost
-                    routeCost += distances.getCost(from, to);
-                    
-                    search(to, increasedRoute);
-                    
-                    // update the route's cost (back to the previous value)
-                    routeCost -= distances.getCost(from, to);
-                }
-            }
-        }
-         *
-         **/
-        
+        // add the last town
+        routeCost += distances.getCost(currentTown, sourceCity);
+        followedRoute.add(sourceCity);
+        nodes++;
     }    
 }
