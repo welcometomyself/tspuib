@@ -14,6 +14,7 @@ package travelingsalesman;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.PriorityQueue;
+import java.util.Vector;
 
 /**
  *
@@ -23,7 +24,7 @@ public class AStar {
     
     RoutesMatrix distances;
     int sourceCity;
-    PriorityQueue<Town> opened = new PriorityQueue<Town>(200, 
+    PriorityQueue<Town> opened = new PriorityQueue<Town>(1000, 
         new Comparator<Town>() {
           public int compare(Town a, Town b) {
             return a.f - b.f;
@@ -32,9 +33,8 @@ public class AStar {
       );  
     String result = new String();
     
-    ArrayList optimumRoute, followedRoute;
+    ArrayList optimumRoute;
     int nodes = 0;
-    int routeCost = 0;
     int optimumCost = Integer.MAX_VALUE;     
     
     // Estimation of the cost between two cities, it can overestimate the real value (h' > h),
@@ -78,11 +78,11 @@ public class AStar {
 
             // rebuild the followed route for the selected town
             Town aux = currentTown;
-            followedRoute = new ArrayList();
+            ArrayList followedRoute = new ArrayList();
             followedRoute.add(aux.number);
             while (aux.level != 0) {
                 aux = aux.parent;
-                followedRoute.add(0, aux.number);
+                followedRoute.add(aux.number);
             }
             
             if (currentTown.level == distances.getCitiesCount()) {
@@ -107,10 +107,13 @@ public class AStar {
         }
         long endTime = System.currentTimeMillis();
         
-        result =  "A STAR SEARCH\n\n";     
-        result += "Better solution: "+optimumRoute.toString() + "// Cost: "+optimumCost+"\n";
-        result += "Visited Nodes: "+nodes+"\n";
-        result += "Elapsed Time: "+(endTime-startTime)+" ms\n";
+        result = "-------------------------------------\n";
+        result +=  "A ESTRELLA:\n";
+        result += "-------------------------------------\n";
+        result += "MEJOR SOLUCIÓN: \t"+optimumRoute.toString() + "\nCOSTE: \t\t"+optimumCost+"\n";
+        result += "NODOS VISITADOS: \t"+nodes+"\n";
+        result += "TIEMPO TRANSCURRIDO: \t"+(endTime-startTime)+" ms\n";
+        result += "-------------------------------------\n";
         
         return result;        
     }    

@@ -55,15 +55,17 @@ public class HillClimbing {
         followedRoute.add(sourceCity);
         nodes++;
         
-        result =  "HILL CLIMBING SEARCH\n\n";
-        
         long startTime = System.currentTimeMillis();
         search(sourceCity);
-        long endTime = System.currentTimeMillis();
+        long endTime = System.currentTimeMillis();        
         
-        result += "\nBetter solution: "+followedRoute.toString() + "// Cost: "+routeCost+"\n";
-        result += "Visited Nodes: "+nodes+"\n";
-        result += "Elapsed Time: "+(endTime-startTime)+" ms\n";
+        result = "-------------------------------------\n";
+        result +=  "MÉTODO DE ESCALADA:\n";
+        result += "-------------------------------------\n";
+        result += "MEJOR SOLUCIÓN: \t"+followedRoute.toString() + "\nCOSTE: \t\t"+routeCost+"\n";
+        result += "NODOS VISITADOS: \t"+nodes+"\n";
+        result += "TIEMPO TRANSCURRIDO: \t"+(endTime-startTime)+" ms\n";
+        result += "-------------------------------------\n";        
         
         return result;         
     }  
@@ -97,6 +99,5 @@ public class HillClimbing {
         routeCost += distances.getCost(currentTown, sourceCity);
         followedRoute.add(sourceCity);
         nodes++;
-    }     
-    
+    }         
 }

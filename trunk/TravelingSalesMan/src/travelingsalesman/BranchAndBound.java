@@ -43,17 +43,19 @@ public class BranchAndBound {
         initialRoute = new ArrayList();
         initialRoute.add(sourceCity);
         optimumRoute = new ArrayList();
-        nodes++;
-        
-        result =  "BRANCH AND BOUND SEARCH\n\n";
+        nodes++;        
         
         long startTime = System.currentTimeMillis();
         search(sourceCity, initialRoute);
-        long endTime = System.currentTimeMillis();
+        long endTime = System.currentTimeMillis();        
         
-        result += "\nBetter solution: "+optimumRoute.toString() + "// Cost: "+optimumCost+"\n";
-        result += "Visited Nodes: "+nodes+"\n";
-        result += "Elapsed Time: "+(endTime-startTime)+" ms\n";
+        result = "-------------------------------------\n";
+        result +=  "RAMIFICACIÓN Y PODA:\n";
+        result += "-------------------------------------\n";
+        result += "MEJOR SOLUCIÓN: \t"+optimumRoute.toString() + "\nCOSTE: \t\t"+optimumCost+"\n";
+        result += "NODOS VISITADOS: \t"+nodes+"\n";
+        result += "TIEMPO TRANSCURRIDO: \t"+(endTime-startTime)+" ms\n";
+        result += "-------------------------------------\n";
         
         return result;         
     }
@@ -102,8 +104,7 @@ public class BranchAndBound {
                     routeCost -= distances.getCost(from, to);
                 }
             }
-        }
-        
+        }        
     }
     
 }

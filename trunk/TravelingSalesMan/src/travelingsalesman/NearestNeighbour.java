@@ -42,17 +42,19 @@ public class NearestNeighbour {
         
         followedRoute = new ArrayList();
         followedRoute.add(sourceCity);
-        nodes++;
-        
-        result =  "NEAREST NEIGHBOUR SEARCH\n\n";
+        nodes++;        
         
         long startTime = System.currentTimeMillis();
         search(sourceCity);
         long endTime = System.currentTimeMillis();
         
-        result += "\nBetter solution: "+followedRoute.toString() + "// Cost: "+routeCost+"\n";
-        result += "Visited Nodes: "+nodes+"\n";
-        result += "Elapsed Time: "+(endTime-startTime)+" ms\n";
+        result = "-------------------------------------\n";
+        result +=  "VECINO MÁS PRÓXIMO:\n";
+        result += "-------------------------------------\n";
+        result += "MEJOR SOLUCIÓN: \t"+followedRoute.toString() + "\nCOSTE: \t\t"+routeCost+"\n";
+        result += "NODOS VISITADOS: \t"+nodes+"\n";
+        result += "TIEMPO TRANSCURRIDO: \t"+(endTime-startTime)+" ms\n";
+        result += "-------------------------------------\n";        
         
         return result;         
     }   
