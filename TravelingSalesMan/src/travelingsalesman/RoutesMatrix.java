@@ -12,7 +12,13 @@
 
 package travelingsalesman;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.util.Random;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -78,10 +84,15 @@ public class RoutesMatrix {
      */
     public Object[][] getCosts () {
         
-        Object [][] array = new Object[cities][cities];
+        Object [][] array = new Object[cities][cities+1];
         for (int i=0; i<cities; i++){
             for (int j=0; j<cities; j++){
-                array[i][j] = theMatrix[i][j];
+                if (j == 0) {
+                    array[i][0] = i;
+                    array[i][j+1] = theMatrix[i][j];
+                }
+                else
+                    array[i][j+1] = theMatrix[i][j];
             }
         }
         return array;
@@ -92,9 +103,14 @@ public class RoutesMatrix {
      */
     public Object[] getCities () {
         
-        Object[] array = new Object[cities];
+        Object[] array = new Object[cities+1];
         for (int i=0; i<cities; i++) {
-            array[i] = i;
+            if (i == 0) {
+                array[i] = " ";
+                array[i+1] = 0;
+            }
+            else
+                array[i+1] = i;
         }
         return array;
     }
@@ -119,6 +135,55 @@ public class RoutesMatrix {
             }
         }
         return str;
+    }
+    
+    
+public class MiRender extends DefaultTableCellRenderer
+{
+   public Component getTableCellRendererComponent(JTable table,
+      Object value,
+      boolean isSelected,
+      boolean hasFocus,
+      int row,
+      int column)
+   {
+      super.getTableCellRendererComponent (table, value, isSelected, hasFocus, row, column);
+      this.setOpaque(true);
+      this.setToolTipText("");
+      if (column == 0) {
+            this.setBackground(Color.LIGHT_GRAY);
+            this.setHorizontalAlignment(JTextField.CENTER);
+      }
+      else if (column -1 == row) {
+            this.setBackground(Color.LIGHT_GRAY);
+      }
+      else {
+            this.setBackground(Color.WHITE);
+            this.setToolTipText("From city "+row+" to city "+(column-1));
+      }
+      return this;
+   }
+}
+    
+    
+    /** 
+     * Shows the content of the matrix in a JTable object.
+     */
+    public void drawJTable (JTable j) {
+        
+        DefaultTableModel dtm = new DefaultTableModel() {
+            public boolean isCellEditable(int row, int column) {
+                if (column != 0 && (column - 1 != row))
+                    return true;
+                else
+                    return false;
+            }
+        };
+        dtm.setDataVector(this.getCosts(), this.getCities());
+        // set the background of the first column
+        j.setModel(dtm);
+        j.setDefaultRenderer (Object.class, new MiRender());
+
     }
     
 }
