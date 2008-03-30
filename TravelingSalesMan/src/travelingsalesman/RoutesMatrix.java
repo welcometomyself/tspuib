@@ -158,7 +158,7 @@ public class RoutesMatrix {
           }
           else {
                 this.setBackground(Color.WHITE);
-                this.setToolTipText("From city "+row+" to city "+(column-1));
+                this.setToolTipText("De la ciudad "+row+" a la "+(column-1));
           }
           return this;
        }
