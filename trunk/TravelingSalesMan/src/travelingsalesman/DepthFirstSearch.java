@@ -45,13 +45,14 @@ public class DepthFirstSearch {
         optimumRoute = new ArrayList();
         nodes++;
         
+        result = "-------------------------------------\n";
+        result +=  "PRIMERO EN PROFUNDIDAD:\n";
+        result += "-------------------------------------\n";        
+        
         long startTime = System.currentTimeMillis();
         search(sourceCity, initialRoute);
         long endTime = System.currentTimeMillis();
         
-        result = "-------------------------------------\n";
-        result +=  "PRIMERO EN PROFUNDIDAD:\n";
-        result += "-------------------------------------\n";
         result += "MEJOR SOLUCIÓN: \t"+optimumRoute.toString() + "\nCOSTE: \t\t"+optimumCost+"\n";
         result += "NODOS VISITADOS: \t"+nodes+"\n";
         result += "TIEMPO TRANSCURRIDO: \t"+(endTime-startTime)+" ms\n";
@@ -80,7 +81,8 @@ public class DepthFirstSearch {
                 optimumRoute = (ArrayList)followedRoute.clone();
             }
             
-            result += followedRoute.toString() + "// Cost: "+routeCost + "\n";
+            // DEBUG
+            //result += followedRoute.toString() + "// COSTE: "+routeCost + "\n";
             
             // update the route's cost (back to the previous value)
             routeCost -= distances.getCost(from, sourceCity);

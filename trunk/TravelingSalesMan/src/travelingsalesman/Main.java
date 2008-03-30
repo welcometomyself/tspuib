@@ -23,6 +23,7 @@ import javax.swing.table.*;
 public class Main extends javax.swing.JFrame {
     
     static RoutesMatrix routes;
+    int sourceCity = 0;
     
     /** Creates new form Main */
     public Main() {
@@ -30,12 +31,14 @@ public class Main extends javax.swing.JFrame {
         
         // init the routes matrix
         routes = new RoutesMatrix(4);
-        System.out.print(routes.toString());
         
         // init the cities checkbox
         for (int i = 2; i <= 100; i++)
             jComboBox1.addItem(i);
+        for (int i = 0; i <= 3; i++)
+            jComboBox2.addItem(i);
         jComboBox1.setSelectedIndex(2);
+        jComboBox2.setSelectedIndex(0);
         
         // configure the JTable to display de routes matrix
         routes.drawJTable(jTable1);
@@ -55,6 +58,8 @@ public class Main extends javax.swing.JFrame {
         jButton7 = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jComboBox2 = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -66,13 +71,16 @@ public class Main extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jPanel5 = new javax.swing.JPanel();
+        jButton9 = new javax.swing.JButton();
 
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("IA - El Viajante de Comercio");
+        setTitle("IA - El Viajante de Comercio (Vicente J. Ferrer Dalmau)");
         setBackground(new java.awt.Color(255, 255, 255));
         setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        setResizable(false);
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Configurar Ciudades"));
@@ -101,7 +109,7 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 230, -1, -1));
+        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 230, -1, -1));
 
         jButton7.setText("Modificar distancias");
         jButton7.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -110,12 +118,29 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 230, -1, -1));
+        jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 230, 150, -1));
+
+        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox1ItemStateChanged(evt);
+            }
+        });
 
         jPanel1.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 230, -1, -1));
 
         jLabel1.setText("N\u00ba Ciudades:");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, -1, 20));
+
+        jLabel2.setText("Ciudad inicial:");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 230, 80, 20));
+
+        jComboBox2.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox2ItemStateChanged(evt);
+            }
+        });
+
+        jPanel1.add(jComboBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 230, -1, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 890, 270));
 
@@ -187,6 +212,7 @@ public class Main extends javax.swing.JFrame {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados"));
         jTextArea1.setColumns(20);
+        jTextArea1.setEditable(false);
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
@@ -194,37 +220,127 @@ public class Main extends javax.swing.JFrame {
 
         getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 270, 890, 210));
 
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("B\u00fasqueda No Informada & Informada"));
+        jButton9.setText("Todo");
+        jButton9.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton9MouseClicked(evt);
+            }
+        });
+
+        jPanel5.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 20, 100, -1));
+
+        getContentPane().add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 540, 890, 60));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton9MouseClicked
+
+        try {
+            DepthFirstSearch s1 = new DepthFirstSearch(routes, sourceCity);
+            jTextArea1.setText(s1.execute());
+            BranchAndBound s2 = new BranchAndBound(routes, sourceCity);
+            jTextArea1.setText(jTextArea1.getText() + s2.execute());
+            UniformCost s3 = new UniformCost(routes, sourceCity);
+            jTextArea1.setText(jTextArea1.getText() + s3.execute());
+            AStar s6 = new AStar(routes, sourceCity);        
+            jTextArea1.setText(jTextArea1.getText() + s6.execute());                
+            NearestNeighbour s4 = new NearestNeighbour(routes, sourceCity);
+            jTextArea1.setText(jTextArea1.getText() + s4.execute());
+            HillClimbing s5 = new HillClimbing(routes, sourceCity);
+            jTextArea1.setText(jTextArea1.getText() + s5.execute());
+        } catch (java.lang.OutOfMemoryError e) {
+                String msg = "La memoria no es suficiente para ejecutar alguno de los métodos con las "+
+                        ((Integer)jComboBox1.getSelectedItem()).intValue()+" ciudades generadas.";
+                JOptionPane.showMessageDialog(new JFrame(), msg, "Error", JOptionPane.ERROR_MESSAGE);
+        }            
+                
+    }//GEN-LAST:event_jButton9MouseClicked
+
+    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
+
+        if (evt.getStateChange() == evt.SELECTED) {
+            // new number of cities
+            int cities = ((Integer)jComboBox1.getSelectedItem()).intValue();
+            routes = new RoutesMatrix(cities);
+            routes.drawJTable(jTable1);
+            // alter the 2nd comboBox (source city)
+            jComboBox2.removeAllItems();
+            for (int i=0; i<cities; i++)
+                jComboBox2.addItem(i);
+            jComboBox2.setSelectedIndex(0);
+        }        
+    }//GEN-LAST:event_jComboBox1ItemStateChanged
+
+    private void jComboBox2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox2ItemStateChanged
+
+        if (evt.getStateChange() == evt.SELECTED) {
+            // select the new source city
+            sourceCity = ((Integer)jComboBox2.getSelectedItem()).intValue();
+        }
+    }//GEN-LAST:event_jComboBox2ItemStateChanged
+
     private void jButton8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton8MouseClicked
 
-        HillClimbing s = new HillClimbing(routes, 0);
+        try {
+        HillClimbing s = new HillClimbing(routes, sourceCity);
         jTextArea1.setText(s.execute());
+        } catch (java.lang.OutOfMemoryError e) {
+                String msg = "La memoria no es suficiente para ejecutar el Método de Escalada con las "+
+                        ((Integer)jComboBox1.getSelectedItem()).intValue()+" ciudades generadas.";
+                JOptionPane.showMessageDialog(new JFrame(), msg, "Error", JOptionPane.ERROR_MESSAGE);
+        }        
     }//GEN-LAST:event_jButton8MouseClicked
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
 
-        NearestNeighbour s = new NearestNeighbour(routes, 0);
+        try {
+        NearestNeighbour s = new NearestNeighbour(routes, sourceCity);
         jTextArea1.setText(s.execute());
+        } catch (java.lang.OutOfMemoryError e) {
+                String msg = "La memoria no es suficiente para ejecutar la búsqueda del Vecino más Proximo con las "+
+                        ((Integer)jComboBox1.getSelectedItem()).intValue()+" ciudades generadas.";
+                JOptionPane.showMessageDialog(new JFrame(), msg, "Error", JOptionPane.ERROR_MESSAGE);
+        }        
     }//GEN-LAST:event_jButton4MouseClicked
 
     private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton5MouseClicked
 
-        AStar s = new AStar(routes, 0);
+        try {
+        AStar s = new AStar(routes, sourceCity);
         jTextArea1.setText(s.execute());        
+        } catch (java.lang.OutOfMemoryError e) {
+                String msg = "La memoria no es suficiente para ejecutar la búsqueda A Estrella con las "+
+                        ((Integer)jComboBox1.getSelectedItem()).intValue()+" ciudades generadas.";
+                JOptionPane.showMessageDialog(new JFrame(), msg, "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton5MouseClicked
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
 
-        UniformCost s = new UniformCost(routes, 0);
+        try {
+        UniformCost s = new UniformCost(routes, sourceCity);
         jTextArea1.setText(s.execute());
+        } catch (java.lang.OutOfMemoryError e) {
+                String msg = "La memoria no es suficiente para ejecutar la búsqueda de Costo Uniforme con las "+
+                        ((Integer)jComboBox1.getSelectedItem()).intValue()+" ciudades generadas.";
+                JOptionPane.showMessageDialog(new JFrame(), msg, "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton3MouseClicked
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
 
-        BranchAndBound s = new BranchAndBound(routes, 0);
+        try {
+        BranchAndBound s = new BranchAndBound(routes, sourceCity);
         jTextArea1.setText(s.execute());
+        } catch (java.lang.OutOfMemoryError e) {
+                String msg = "La memoria no es suficiente para ejecutar la búsqueda con Ramificación y Poda con las "+
+                        ((Integer)jComboBox1.getSelectedItem()).intValue()+" ciudades generadas.";
+                JOptionPane.showMessageDialog(new JFrame(), msg, "Error", JOptionPane.ERROR_MESSAGE);
+        }        
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void jButton7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton7MouseClicked
@@ -253,8 +369,14 @@ public class Main extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
 
-        DepthFirstSearch s = new DepthFirstSearch(routes, 0);
+        try {
+        DepthFirstSearch s = new DepthFirstSearch(routes, sourceCity);
         jTextArea1.setText(s.execute());
+        } catch (java.lang.OutOfMemoryError e) {
+                String msg = "La memoria no es suficiente para ejecutar la búsqueda Primero en Profundidad con las "+
+                        ((Integer)jComboBox1.getSelectedItem()).intValue()+" ciudades generadas.";
+                JOptionPane.showMessageDialog(new JFrame(), msg, "Error", JOptionPane.ERROR_MESSAGE);
+        }        
     }//GEN-LAST:event_jButton1MouseClicked
 
     public void printResults(String results) {
@@ -282,12 +404,16 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;

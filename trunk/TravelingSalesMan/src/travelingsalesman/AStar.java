@@ -82,7 +82,7 @@ public class AStar {
             followedRoute.add(aux.number);
             while (aux.level != 0) {
                 aux = aux.parent;
-                followedRoute.add(aux.number);
+                followedRoute.add(0, aux.number);
             }
             
             if (currentTown.level == distances.getCitiesCount()) {
