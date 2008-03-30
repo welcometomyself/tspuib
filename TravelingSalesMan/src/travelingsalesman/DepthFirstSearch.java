@@ -28,7 +28,6 @@ public class DepthFirstSearch {
     int routeCost = 0;
     int optimumCost = Integer.MAX_VALUE;
     
-    
     /** Creates a new instance of DepthFirstSearch */
     public DepthFirstSearch(RoutesMatrix matrix, int sourceCity) {
         
@@ -46,19 +45,20 @@ public class DepthFirstSearch {
         optimumRoute = new ArrayList();
         nodes++;
         
-        result =  "DEPTH FIRST SEARCH\n\n";
-        
         long startTime = System.currentTimeMillis();
         search(sourceCity, initialRoute);
         long endTime = System.currentTimeMillis();
         
-        result += "\nBetter solution: "+optimumRoute.toString() + "// Cost: "+optimumCost+"\n";
-        result += "Visited Nodes: "+nodes+"\n";
-        result += "Elapsed Time: "+(endTime-startTime)+" ms\n";
+        result = "-------------------------------------\n";
+        result +=  "PRIMERO EN PROFUNDIDAD:\n";
+        result += "-------------------------------------\n";
+        result += "MEJOR SOLUCIÓN: \t"+optimumRoute.toString() + "\nCOSTE: \t\t"+optimumCost+"\n";
+        result += "NODOS VISITADOS: \t"+nodes+"\n";
+        result += "TIEMPO TRANSCURRIDO: \t"+(endTime-startTime)+" ms\n";
+        result += "-------------------------------------\n";        
         
         return result;         
-    }
-    
+    }    
     
     /**
      * @param from node where we start the search.
@@ -102,8 +102,6 @@ public class DepthFirstSearch {
                     routeCost -= distances.getCost(from, to);
                 }
             }
-        }
-        
-    }
-    
+        }        
+    }    
 }

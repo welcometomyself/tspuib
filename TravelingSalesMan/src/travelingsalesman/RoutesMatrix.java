@@ -137,34 +137,32 @@ public class RoutesMatrix {
         return str;
     }
     
-    
-public class MiRender extends DefaultTableCellRenderer
-{
-   public Component getTableCellRendererComponent(JTable table,
-      Object value,
-      boolean isSelected,
-      boolean hasFocus,
-      int row,
-      int column)
-   {
-      super.getTableCellRendererComponent (table, value, isSelected, hasFocus, row, column);
-      this.setOpaque(true);
-      this.setToolTipText("");
-      if (column == 0) {
-            this.setBackground(Color.LIGHT_GRAY);
-            this.setHorizontalAlignment(JTextField.CENTER);
-      }
-      else if (column -1 == row) {
-            this.setBackground(Color.LIGHT_GRAY);
-      }
-      else {
-            this.setBackground(Color.WHITE);
-            this.setToolTipText("From city "+row+" to city "+(column-1));
-      }
-      return this;
-   }
-}
-    
+    // Redefine the behaviour of the table
+    public class MyRender extends DefaultTableCellRenderer {
+       public Component getTableCellRendererComponent(JTable table,
+          Object value,
+          boolean isSelected,
+          boolean hasFocus,
+          int row,
+          int column)
+       {
+          super.getTableCellRendererComponent (table, value, isSelected, hasFocus, row, column);
+          this.setOpaque(true);
+          this.setToolTipText("");
+          if (column == 0) {
+                this.setBackground(Color.LIGHT_GRAY);
+                this.setHorizontalAlignment(JTextField.CENTER);
+          }
+          else if (column -1 == row) {
+                this.setBackground(Color.LIGHT_GRAY);
+          }
+          else {
+                this.setBackground(Color.WHITE);
+                this.setToolTipText("From city "+row+" to city "+(column-1));
+          }
+          return this;
+       }
+    }
     
     /** 
      * Shows the content of the matrix in a JTable object.
@@ -182,8 +180,7 @@ public class MiRender extends DefaultTableCellRenderer
         dtm.setDataVector(this.getCosts(), this.getCities());
         // set the background of the first column
         j.setModel(dtm);
-        j.setDefaultRenderer (Object.class, new MiRender());
-
+        j.setDefaultRenderer (Object.class, new MyRender());
     }
     
 }

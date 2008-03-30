@@ -62,10 +62,7 @@ public class UniformCost {
             // gets the city with lower g value
             Town currentTown = toExpand.poll();
             nodes++;
-            //System.out.println("selected node: "+currentTown.number+" with g = "+currentTown.g);
 
-            // TODO: It could be in Town class ... so it wouldn't need to be computed
-            // every time ...
             // rebuild the followed route for the selected town
             Town aux = currentTown;
             followedRoute = new ArrayList();
@@ -73,7 +70,6 @@ public class UniformCost {
             while (aux.level != 0) {
                 aux = aux.parent;
                 followedRoute.add(0, aux.number);
-                //System.out.println("the level of city "+aux.number+" is not zero");
             }
             
             if (currentTown.level == distances.getCitiesCount()) {
@@ -87,27 +83,23 @@ public class UniformCost {
                     boolean visited = followedRoute.contains(i);
                     boolean isSolution = (followedRoute.size() == distances.getCitiesCount())&&(i == sourceCity);
 
-                    /*
-                    System.out.println("candidate child node: "+i);
-                    System.out.println("visited = "+visited);
-                    System.out.println("isSolution = "+isSolution);
-                     */
-
                     if (!visited || isSolution) {
                         Town childTown = new Town(i, currentTown.g + distances.getCost(currentTown.number, i), 0, currentTown.level + 1);
-                        //System.out.println("selected child town: "+childTown.number);
                         childTown.parent = currentTown;
                         toExpand.add(childTown);  
                     }
                 }                
             }
         }
-        long endTime = System.currentTimeMillis();
+        long endTime = System.currentTimeMillis();        
         
-        result =  "UNIFORM COST SEARCH\n\n";     
-        result += "Better solution: "+optimumRoute.toString() + "// Cost: "+optimumCost+"\n";
-        result += "Visited Nodes: "+nodes+"\n";
-        result += "Elapsed Time: "+(endTime-startTime)+" ms\n";
+        result = "-------------------------------------\n";
+        result +=  "BÚSQUEDA DE COSTO UNIFORME:\n";
+        result += "-------------------------------------\n";
+        result += "MEJOR SOLUCIÓN: \t"+optimumRoute.toString() + "\nCOSTE: \t\t"+optimumCost+"\n";
+        result += "NODOS VISITADOS: \t"+nodes+"\n";
+        result += "TIEMPO TRANSCURRIDO: \t"+(endTime-startTime)+" ms\n";
+        result += "-------------------------------------\n";        
         
         return result;
     }
