@@ -647,7 +647,12 @@ status open
 \begin_inset Caption
 
 \begin_layout Standard
-Aquí el valor se dispara con unas cuantas ciudades más.
+Número de nodos expandidos en función del número de ciudades.
+\newline
+Aquí el valor
+ se dispara con unas cuantas ciudades más que
+\newline
+en el caso anterior.
 \end_layout
 
 \end_inset
@@ -957,8 +962,12 @@ La búsqueda de coste uniforme encontrará la mejor solución si se cumple
 
 \begin_layout Standard
 Este algoritmo puede implementarse fácilmente con la ayuda de una estructura
- de datos cola ordenada por prioridad, dónde aquellos nodos con menor coste
- (del nodo inicial hasta dicho nodo) son más prioritarios.
+ de datos 
+\series bold
+cola ordenada por prioridad
+\series default
+, dónde aquellos nodos con menor coste (del nodo inicial hasta dicho nodo)
+ son más prioritarios.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -1029,8 +1038,758 @@ espacial:
 Resultados
 \end_layout
 
+\begin_layout Standard
+En este apartado se muestra la evolución temporal del algoritmo en función
+ del número de ciudades del problema.
+ Para cada una de las ejecuciones se atenderá al número de nodos que han
+ sido expandidos durante la búsqueda.
+ Hay que decir que para un número de ciudades constante, al variar los valores
+ de su matriz de distancias, el número de nodos expandidos variará, es decir,
+ el porcentaje del árbol de búsqueda que se visita varía.
+ Además al mantenerse una cola de prioridad para los nodos abiertos es frecuente
+ ver cómo el programa se queda sin memoria, para algunas configuraciones
+ de esa misma matriz de distancias, y no puede completar la búsqueda; tal
+ efecto se pone de manifiesto a partir de 
+\series bold
+12 ciudades
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename alg03.JPG
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Número de nodos expandidos en función del número de ciudades.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="11" columns="2">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Número de ciudades
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Nodos expandidos
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+13
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+42
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+7
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+136
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+641
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+9
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+1703
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+10
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+29221
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+11
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+13595
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+12
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+67942
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+13
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+106030
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+14
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+347424
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Valores obtenidos en la ejecución.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+De nuevo en la gráfica observamos el comportamiento 
+\series bold
+exponencial 
+\series default
+del algoritmo, aunque aquí hay que tener muy en cuenta el tema de 
+\series bold
+memoria
+\series default
+ (cola de prioridad para los nodos abiertos) cómo ya se mencionó anteriormente.
+ Además atendiendo al tiempo de ejecución, pese a visitar menos nodos resulta
+ por término general más
+\series bold
+ lento
+\series default
+ que el anterior algoritmo (Ramificación y Poda) debido de nuevo a la necesidad
+ de gestionar la cola de prioridad.
+ Este algoritmo permite ejecutarse con un valor máximo de 
+\series bold
+14 ciudades
+\series default
+.
+\end_layout
+
 \begin_layout Section
 Búsqueda A estrella
+\end_layout
+
+\begin_layout Standard
+El algoritmo A estrella es un algoritmo de búsqueda para grafos que encuentra
+ el camino de menor coste entre un nodo inicial y un nodo meta.
+\end_layout
+
+\begin_layout Standard
+Usa una función de evaluación (denotada f(x)) para determinar el orden en
+ que la búsqueda visita nodos en el árbol.
+ La mencionada función es la suma de otras dos funciones: una función que
+ indica el coste del camino seguido hasta un cierto nodo (denotada g(x))
+ y una estimación heurística admisible de la distancia hasta la meta (h(x)).
+ La función de evaluación resulta entonces 
+\begin_inset Formula $f(x)=g(x)+h(x)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Empezando en un nodo inicial dado, el algoritmo expande el nodo con el menor
+ valor de f(x).
+ A estrella mantiene un conjunto de soluciones parciales almacenadas en
+ una 
+\series bold
+cola de prioridad
+\series default
+, cómo en el algoritmo del apartado anterior.
+ La prioridad asignada a un camino x viene determinada por la función f(x).
+ El proceso continua hasta que una meta tiene un valor f(x) menor que cualquier
+ otro nodo en la cola (o hasta que el árbol ha sido completamente recorrido).
+\end_layout
+
+\begin_layout Subsubsection*
+
+\bar under
+Características del algoritmo
+\end_layout
+
+\begin_layout Subsubsection*
+
+\bar under
+Evaluación del algoritmo de búsqueda
+\end_layout
+
+\begin_layout Description
+Completitud: Sí.
+\end_layout
+
+\begin_layout Description
+Complejidad\InsetSpace ~
+temporal: exponencial (debido a la heurística utilizada).
+\end_layout
+
+\begin_layout Description
+Complejidad\InsetSpace ~
+espacial: exponencial.
+\end_layout
+
+\begin_layout Subsubsection*
+
+\bar under
+Resultados
+\end_layout
+
+\begin_layout Standard
+En cuanto a la 
+\series bold
+función heurística
+\series default
+ que se ha utilizado para resolver este problema, dado un nodo consideramos
+ la profundidad a la que se encuentra dentro del árbol de búsqueda.
+ Cuanto más cercano esté al número de ciudades del problema mejor valoración
+ tendrá.
+ Para calcular dicho valor consideraremos además de la profundidad del nodo
+ una estimación del coste del camino entre dos ciudades cualquiera:
+\end_layout
+
+\begin_layout Standard
+Si por ejemplo, los costes de las rutas entre las ciudades pertenecen a
+ una distribución uniforme U(100) y tomamos un coste aproximado de 15 unidades
+ entre dos ciudades cualquiera, tendremos:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $h(x)=(n-l(x))*15$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+dónde
+\series bold
+:
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+n 
+\series default
+representa el número de ciudades del problema.
+\end_layout
+
+\begin_layout Standard
+l(x) es la profundidad del nodo x.
+\end_layout
+
+\begin_layout Standard
+En el caso considerado el valor h(x) puede sobreestimar al valor real del
+ coste de la ruta entre el nodo considerado y un nodo meta, ya que al tener
+ valores de una U(100) óbviamente tendremos rutas con costes mayores a 15
+ (constante considerada).
+ Lo anterior implica que en este caso el algorimo no es 
+\series bold
+óptimo
+\series default
+.
+ A pesar de lo anterior tras ejecutar el algoritmo se ha comprobado que
+ las soluciones ofrecidas por el algoritmo son prácticamente siempre la
+ mejor, y en caso de no serlo, son bastante aproximadas.
+\end_layout
+
+\begin_layout Standard
+Veamos ahora la evolución temporal del algoritmo en función del número de
+ ciudades del problema.
+ Para cada una de las ejecuciones se atenderá al número de nodos que han
+ sido expandidos durante la búsqueda.
+ Hay que decir que para un número de ciudades constante, al variar los valores
+ de su matriz de distancias, el número de nodos expandidos variará, es decir,
+ el porcentaje del árbol de búsqueda que se visita varía.
+\end_layout
+
+\begin_layout Standard
+Pese a utilizar de nuevo colas de prioridad aquí la memoria no supone tanto
+ problema cómo en el algorimo anterior ya que A estrella converge mucho
+ más deprisa hacia una solución.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename alg04.JPG
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Nodos expandidos en función del número de ciudades.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float table
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="9" columns="2">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Número de ciudades
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Nodos expandidos
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+37
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+7
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+422
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+10
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+808
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+13
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+8528
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+223
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+232058
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+75
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+14370
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+5278
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Valores obtenidos en la ejecución.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Atendiendo al gráfico no se muestra el carácter 
+\series bold
+exponencial
+\series default
+ del algoritmo ya que puede ejecutarse para más de 100 ciudades.
+ Cómo se dijo en clase el principal problema de este algoritmo es que suele
+ quedarse sin memoria y así ocurre cuándo se ha intentado probar para más
+ de 100 ciudades.
+ Aún así no se debe dudar de su coste exponencial en este caso ya que el
+ error de la función heurística crece más rápido que el logaritmo del costo
+ real de la ruta.
+\end_layout
+
+\begin_layout Standard
+Este algoritmo permite ejecutarse con un valor máximo de 
+\series bold
+100 ciudades
+\series default
+, si no se presentan problemas de memoria (tamaño de las colas de prioridad).
 \end_layout
 
 \begin_layout Section
