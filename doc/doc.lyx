@@ -581,8 +581,24 @@ Características del algoritmo
 Aspectos positivos:
 \end_layout
 
+\begin_layout Itemize
+Bajo consumo de memoria.
+\end_layout
+
+\begin_layout Itemize
+Rápido si existen muchas soluciones.
+\end_layout
+
+\begin_layout Itemize
+Permite su aplicación para un mayor número de ciudades que en el caso anterior.
+\end_layout
+
 \begin_layout Standard
 Aspectos negativos:
+\end_layout
+
+\begin_layout Itemize
+Coste temporal todavía exponencial.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -601,12 +617,12 @@ Completitud: No, ya que, de nuevo, puede quedarse atrapado al descender
 
 \begin_layout Description
 Complejidad\InsetSpace ~
-temporal:
+temporal: exponencial.
 \end_layout
 
 \begin_layout Description
 Complejidad\InsetSpace ~
-espacial:
+espacial: lineal.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -1384,13 +1400,14 @@ El algoritmo A estrella es un algoritmo de búsqueda para grafos que encuentra
 \end_layout
 
 \begin_layout Standard
-Usa una función de evaluación (denotada f(x)) para determinar el orden en
- que la búsqueda visita nodos en el árbol.
+Usa una función heurística (denotada f'(x), es una aproximación a f(x),
+ función que proporciona la verdadera evaluación de un nodo) para determinar
+ el orden en que la búsqueda visita nodos en el árbol.
  La mencionada función es la suma de otras dos funciones: una función que
  indica el coste del camino seguido hasta un cierto nodo (denotada g(x))
- y una estimación heurística admisible de la distancia hasta la meta (h(x)).
+ y una estimación admisible de la distancia hasta la meta (h'(x)).
  La función de evaluación resulta entonces 
-\begin_inset Formula $f(x)=g(x)+h(x)$
+\begin_inset Formula $f'(x)=g(x)+h'(x)$
 \end_inset
 
 .
@@ -1398,15 +1415,15 @@ Usa una función de evaluación (denotada f(x)) para determinar el orden en
 
 \begin_layout Standard
 Empezando en un nodo inicial dado, el algoritmo expande el nodo con el menor
- valor de f(x).
+ valor de f'(x).
  A estrella mantiene un conjunto de soluciones parciales almacenadas en
  una 
 \series bold
 cola de prioridad
 \series default
 , cómo en el algoritmo del apartado anterior.
- La prioridad asignada a un camino x viene determinada por la función f(x).
- El proceso continua hasta que una meta tiene un valor f(x) menor que cualquier
+ La prioridad asignada a un camino x viene determinada por la función f'(x).
+ El proceso continua hasta que una meta tiene un valor f'(x) menor que cualquier
  otro nodo en la cola (o hasta que el árbol ha sido completamente recorrido).
 \end_layout
 
@@ -1420,8 +1437,16 @@ Características del algoritmo
 Aspectos positivos:
 \end_layout
 
+\begin_layout Itemize
+Ningún otro algoritmo óptimo garantiza expandir menos nodos que A estrella.
+\end_layout
+
 \begin_layout Standard
 Aspectos negativos:
+\end_layout
+
+\begin_layout Itemize
+Alto consumo de memoria.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -1455,22 +1480,27 @@ En cuanto a la
 \series bold
 función heurística
 \series default
- que se ha utilizado para resolver este problema, dado un nodo consideramos
- la profundidad a la que se encuentra dentro del árbol de búsqueda.
- Cuanto más cercano esté al número de ciudades del problema mejor valoración
- tendrá.
+ que se ha utilizado para resolver este problema, para obtener el valor
+ de la estimación 
+\series bold
+h'(x)
+\series default
+ dado un nodo consideramos la profundidad a la que se encuentra dentro del
+ árbol de búsqueda.
+ Cuanto más cercano esté al número de ciudades del problema (por tanto a
+ una solución) mejor valoración tendrá.
  Para calcular dicho valor consideraremos además de la profundidad del nodo
  una estimación del coste del camino entre dos ciudades cualquiera:
 \end_layout
 
 \begin_layout Standard
-Si por ejemplo, los costes de las rutas entre las ciudades pertenecen a
- una distribución uniforme U(100) y tomamos un coste aproximado de 15 unidades
- entre dos ciudades cualquiera, tendremos:
+Si por ejemplo, los costes de las rutas entre las ciudades del problema
+ pertenecen a una distribución uniforme U(100) y tomamos un coste aproximado
+ de 15 unidades cómo coste entre dos ciudades cualquiera, tendremos:
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula $h(x)=(n-l(x))*15$
+\begin_inset Formula $h'(x)=(n-l(x))*15$
 \end_inset
 
 
@@ -1491,11 +1521,15 @@ representa el número de ciudades del problema.
 \end_layout
 
 \begin_layout Standard
-l(x) es la profundidad del nodo x.
+
+\series bold
+l(x)
+\series default
+ es la profundidad del nodo x.
 \end_layout
 
 \begin_layout Standard
-En el caso considerado el valor h(x) puede sobreestimar al valor real del
+En el caso considerado el valor h'(x) puede sobreestimar al valor real del
  coste de la ruta entre el nodo considerado y un nodo meta, ya que al tener
  valores de una U(100) óbviamente tendremos rutas con costes mayores a 15
  (constante considerada).
@@ -1505,8 +1539,8 @@ En el caso considerado el valor h(x) puede sobreestimar al valor real del
 \series default
 .
  A pesar de lo anterior tras ejecutar el algoritmo se ha comprobado que
- las soluciones ofrecidas por el algoritmo son prácticamente siempre la
- mejor, y en caso de no serlo, son bastante aproximadas.
+ las soluciones ofrecidas por el algoritmo son prácticamente siempre las
+ mejores, y en caso de no serlo, son bastante aproximadas.
 \end_layout
 
 \begin_layout Standard
@@ -1833,8 +1867,20 @@ Características del algoritmo
 Aspectos positivos:
 \end_layout
 
+\begin_layout Itemize
+Es un algoritmo muy rápido.
+\end_layout
+
+\begin_layout Itemize
+Su consumo de memoria muy bajo.
+\end_layout
+
 \begin_layout Standard
 Aspectos negativos:
+\end_layout
+
+\begin_layout Itemize
+No es óptimo.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -2113,6 +2159,22 @@ cientos de ciudades
 Método de escalada
 \end_layout
 
+\begin_layout Standard
+El algoritmo de escalada consiste en recorrer las distintos nodos explorando
+ en cada momento aquel cuyo coste f(x)’, que incluye el coste real de la
+ ruta g(x), y el coste de h(x)’, aproximación a h(x), sea menor.
+\end_layout
+
+\begin_layout Standard
+Constituye un caso particular de una búsqueda en profundidad sin posibilidad
+ de vuelta atrás.
+\end_layout
+
+\begin_layout Standard
+Es parecido al algoritmo del apartado anterior, pero para el problema de
+ esta práctica no tiene sentido utilizarlo, ya que no obtiene buenas rutas.
+\end_layout
+
 \begin_layout Subsubsection*
 
 \bar under
@@ -2123,8 +2185,24 @@ Características del algoritmo
 Aspectos positivos:
 \end_layout
 
+\begin_layout Itemize
+Es un algoritmo tan rápido cómo el Vecino más Próximo.
+\end_layout
+
+\begin_layout Itemize
+Tiene un bajo consumo de memoria.
+\end_layout
+
 \begin_layout Standard
 Aspectos negativos:
+\end_layout
+
+\begin_layout Itemize
+No es óptimo.
+\end_layout
+
+\begin_layout Itemize
+Puede quedar estancado.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -2134,17 +2212,17 @@ Evaluación del algoritmo de búsqueda
 \end_layout
 
 \begin_layout Description
-Completitud:
+Completitud: No, es irrevocable (no puede volver atrás).
 \end_layout
 
 \begin_layout Description
 Complejidad\InsetSpace ~
-temporal:
+temporal: O(m)
 \end_layout
 
 \begin_layout Description
 Complejidad\InsetSpace ~
-espacial:
+espacial: O(m)
 \end_layout
 
 \begin_layout Subsubsection*
@@ -2380,6 +2458,13 @@ Queda claro por lo tanto que es muy parecido al anterior algorimo siendo
 \series bold
 lineal.
  
+\series default
+Aquí es imposible evaluar lo bueno que es un estado por sí mismo (habría
+ que hacerlo en relación a las demás rutas), con lo cual es mejor 
+\series bold
+evitar el uso
+\series default
+ de este algoritmo.
 \end_layout
 
 \end_body
