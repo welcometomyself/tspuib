@@ -35,6 +35,8 @@ public class Main extends javax.swing.JFrame {
         // init the cities checkbox
         for (int i = 2; i <= 100; i++)
             jComboBox1.addItem(i);
+        for (int i = 2; i <= 10; i++)
+            jComboBox1.addItem(i*100);
         for (int i = 0; i <= 3; i++)
             jComboBox2.addItem(i);
         jComboBox1.setSelectedIndex(2);
