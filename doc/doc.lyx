@@ -1416,6 +1416,14 @@ cola de prioridad
 Características del algoritmo
 \end_layout
 
+\begin_layout Standard
+Aspectos positivos:
+\end_layout
+
+\begin_layout Standard
+Aspectos negativos:
+\end_layout
+
 \begin_layout Subsubsection*
 
 \bar under
@@ -1793,11 +1801,585 @@ Este algoritmo permite ejecutarse con un valor máximo de
 \end_layout
 
 \begin_layout Section
-Método de escalada
+Búsqueda del vecino más próximo
+\end_layout
+
+\begin_layout Standard
+El algoritmo del Vecino más próximo fué uno de los primeros algoritmos usados
+ para encontrar la solución al problema del viajante de comercio.
+ Rápidamente encuentra una solución pero generalmente ésta no es la 
+\series bold
+óptima
+\series default
+.
+\end_layout
+
+\begin_layout Standard
+Este algoritmo es fácil de implementar y se ejecuta rápido pero puede en
+ ocasiones perder rutas más cortas.
+ Cómo guía general, si las últimas etapas de la ruta son comparables en
+ coste a las primeras, entonces la ruta será razonable; si son mucho más
+ grandes la solución hallada será muy mejorable.
+\end_layout
+
+\begin_layout Subsubsection*
+
+\series bold
+\bar under
+Características del algoritmo
+\end_layout
+
+\begin_layout Standard
+Aspectos positivos:
+\end_layout
+
+\begin_layout Standard
+Aspectos negativos:
+\end_layout
+
+\begin_layout Subsubsection*
+
+\bar under
+Evaluación del algoritmo de búsqueda
+\end_layout
+
+\begin_layout Description
+Completitud: Sí.
+\end_layout
+
+\begin_layout Description
+Complejidad\InsetSpace ~
+temporal: O(m)
+\end_layout
+
+\begin_layout Description
+Complejidad\InsetSpace ~
+espacial: O(m)
+\end_layout
+
+\begin_layout Subsubsection*
+
+\bar under
+Resultados
+\end_layout
+
+\begin_layout Standard
+Veamos ahora la evolución temporal del algoritmo en función del número de
+ ciudades del problema.
+ Para cada una de las ejecuciones se atenderá al número de nodos que han
+ sido expandidos durante la búsqueda.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename alg05.JPG
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Nodos expandidos en función del número de ciudades.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="2">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Número de ciudades
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Nodos expandidos
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+6
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+10
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+11
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+21
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+51
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+75
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+76
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+101
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Valores obtenidos en la ejecución.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Observando el gráfico queda patente el caracter 
+\series bold
+lineal
+\series default
+ del algoritmo.
+\end_layout
+
+\begin_layout Standard
+Este algoritmo prescinde de la optimalidad en la solución para lograr un
+ tiempo de ejecución mínimo.
+ Se recomienda usar este algoritmo cuándo no se dispone de gran poder computacio
+nal y/o no se necesita encontrar la mejor solución.
+\end_layout
+
+\begin_layout Standard
+En general este algoritmo no suele dar malas soluciones.
+ Es muy improbable que de el peor de los casos.
+ Puede ejecutarse para 
+\series bold
+cientos de ciudades
+\series default
+.
 \end_layout
 
 \begin_layout Section
-Búsqueda del vecino más próximo
+Método de escalada
+\end_layout
+
+\begin_layout Subsubsection*
+
+\bar under
+Características del algoritmo
+\end_layout
+
+\begin_layout Standard
+Aspectos positivos:
+\end_layout
+
+\begin_layout Standard
+Aspectos negativos:
+\end_layout
+
+\begin_layout Subsubsection*
+
+\bar under
+Evaluación del algoritmo de búsqueda
+\end_layout
+
+\begin_layout Description
+Completitud:
+\end_layout
+
+\begin_layout Description
+Complejidad\InsetSpace ~
+temporal:
+\end_layout
+
+\begin_layout Description
+Complejidad\InsetSpace ~
+espacial:
+\end_layout
+
+\begin_layout Subsubsection*
+
+\bar under
+Resultados
+\end_layout
+
+\begin_layout Standard
+Se muestra a continuación la evolución temporal del algoritmo en función
+ del número de ciudades del problema.
+ Para cada una de las ejecuciones se atenderá al número de nodos que han
+ sido expandidos durante la búsqueda.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename alg06.JPG
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Nodos expandidos en función del número de ciudades.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="7" columns="2">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Número de ciudades
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Nodos expandidos
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+6
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+10
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+11
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+20
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+21
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+51
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+75
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+76
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+100
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+101
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Valores obtenidos en la ejecución.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Queda claro por lo tanto que es muy parecido al anterior algorimo siendo
+ también 
+\series bold
+lineal.
+ 
 \end_layout
 
 \end_body
