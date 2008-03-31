@@ -38,6 +38,7 @@
 \papercolumns 1
 \papersides 1
 \paperpagestyle default
+\bullet 1 0 35 -1
 \tracking_changes false
 \output_changes false
 \author "" 
@@ -161,6 +162,406 @@ Respecto a la búsqueda A*, debe diseñarse al menos una heurística para el
 \begin_layout Standard
 Se valorará la capacidad de iniciativa de los estudiantes además de la presentac
 ión de los resultados y la calidad del análisis de cada técnica.
+\end_layout
+
+\begin_layout Section
+Búsqueda primero en profundidad
+\end_layout
+
+\begin_layout Standard
+El algoritmo Primero en Profundidad es un algoritmo que nos permite realizar
+ búsquedas en un árbol o grafo.
+ Formalmente es una búsqueda no informada que progresa expandiendo el primer
+ nodo hijo en el árbol de búsqueda y continua hasta encontrar un nodo objetivo
+ o hasta encontrar un nodo sin hijos.
+ En ese momento, la búsqueda realiza una vuelta atrás (backtracking) volviendo
+ al nodo más reciente que no había sido explorado completamente, para elegir
+ el siguiente de sus hijos.
+\end_layout
+
+\begin_layout Subsubsection*
+
+\bar under
+Características del algoritmo
+\end_layout
+
+\begin_layout Standard
+Aspectos positivos:
+\end_layout
+
+\begin_layout Itemize
+La 
+\series bold
+memoria
+\series default
+ necesaria es relativamente pequeña, ya que en cada momento sólo hay que
+ guardar la ruta que se está analizando.
+\end_layout
+
+\begin_layout Itemize
+Si hay muchas soluciones posibles, la búsqueda en profundidad es 
+\series bold
+rápida
+\series default
+ ya que tiene muchas posibilidades de encontrar una solución después de
+ haber explorado únicamente una parte del árbol.
+ En nuestro caso esta ventaja no se da porque tenemos que recorrer todo
+ el árbol para dar la mejor solución.
+\end_layout
+
+\begin_layout Standard
+Aspectos negativos:
+\end_layout
+
+\begin_layout Itemize
+Tiene un coste temporal 
+\series bold
+exponencial
+\series default
+, lo que para problemas grandes lo hace poco recomendable (en nuestro caso
+ un número elevado de ciudades).
+\end_layout
+
+\begin_layout Itemize
+En algunos casos el recorrido de ciertas rutas puede conllevar problemas,
+ por ejemplo si tenemos rutas cíclicas o infinitas quedaríamos 
+\series bold
+estancados
+\series default
+, o bien podríamos encontrar soluciones no óptimas después de grandes recorridos
+, o incluso llegar a una solución óptima pero después de haber analizado
+ muchas rutas incorrectas.
+ En definitiva y continuando con la conclusión de la primera desventaja,
+ si la estructura sobre la que realiza la búsqueda es muy grande o infinita
+ no es recomendable usar este algoritmo.
+ 
+\end_layout
+
+\begin_layout Subsubsection*
+
+\bar under
+Evaluación del algoritmo de búsqueda
+\end_layout
+
+\begin_layout Description
+Completitud: No, ya que puede quedarse atrapado al descender por el camino
+ equivocado en árboles de búsqueda muy profundos o incluso infinitos.
+ En esos casos puede quedarse atrapado en un bucle infinito y no devolver
+ nunca una solución.
+\end_layout
+
+\begin_layout Description
+Complejidad\InsetSpace ~
+temporal: 
+\begin_inset Formula $b^{m}$
+\end_inset
+
+, lo que supone un coste inaceptable
+\begin_inset Foot
+status collapsed
+
+\begin_layout Standard
+Dónde 
+\series bold
+b
+\series default
+ es el factor de ramificación, en nuestro caso las ciudades aplicables,
+ 
+\series bold
+d
+\series default
+ es la profundidad de la solución y 
+\series bold
+m
+\series default
+ es la máxima profundidad del árbol de búsqueda.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Description
+Complejidad\InsetSpace ~
+espacial: 
+\begin_inset Formula $bm$
+\end_inset
+
+, sólo necesita almacenar una rama del árbol de búsqueda.
+\end_layout
+
+\begin_layout Subsubsection*
+
+\bar under
+Resultados
+\end_layout
+
+\begin_layout Standard
+A continuación se muestra la evolución temporal del algoritmo en función
+ del número de ciudades del problema.
+ Para cada una de las ejecuciones se atenderá al número de nodos que han
+ sido expandidos durante la búsqueda (en el caso de este algoritmo siempre
+ se expande el árbol completo):
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset Graphics
+	filename alg01.JPG
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+El valor se dispara entre 10 y 11 ciudades.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Standard
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="2">
+<features>
+<column alignment="center" valignment="top" leftline="true" width="0">
+<column alignment="center" valignment="top" leftline="true" rightline="true" width="0">
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Número de ciudades
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+Nodos expandidos
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+22
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+89
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+7
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+2677
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+8
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+18740
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+9
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+149921
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+10
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+1349290
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row topline="true" bottomline="true">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+11
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Standard
+13492901
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Caption
+
+\begin_layout Standard
+Valores obtenidos en la ejecución.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+En el gráfico puede observarse el claro comportamiento exponencial del algoritmo.
+ Cabe mencionar que sólo fue posible ejecutarlo con 11 ciudades cómo máximo.
+\end_layout
+
+\begin_layout Section
+Búsqueda primero en profundidad con ramificación y poda
+\end_layout
+
+\begin_layout Section
+Búsqueda de costo uniforme
+\end_layout
+
+\begin_layout Section
+Búsqueda A estrella
+\end_layout
+
+\begin_layout Section
+Método de escalada
+\end_layout
+
+\begin_layout Section
+Búsqueda del vecino más próximo
 \end_layout
 
 \end_body
