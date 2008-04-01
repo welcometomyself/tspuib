@@ -49,6 +49,8 @@
 
 \begin_layout Title
 El problema del viajante de comercio
+\newline
+Inteligencia Artificial
 \end_layout
 
 \begin_layout Author
@@ -58,14 +60,25 @@ Vicente J.
 <vicente@jdalmau.es>
 \end_layout
 
-\begin_layout Abstract
-Tercera práctica del itinerario 1 de la asignatura Inteligencia Artificial
- correspondiente al año académico 2007/2008.
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Standard
+
+
+\backslash
+thispagestyle{empty}
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 
-\lyxline
+\newpage
 
 \end_layout
 
@@ -3112,6 +3125,6803 @@ A
 \series default
 .
  Dicha matriz aparece en la clase RoutesMatrix.
+\end_layout
+
+\begin_layout Standard
+A continuación se muestran las clases en las que se divide la aplicación.
+\end_layout
+
+\begin_layout Subsection
+AStar
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,language=Java,numbers=left"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * AStar.java
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedDate: 2008-03-30 22:35:24 +0200 (dom, 30 mar 2008) $
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedRevision: 15 $
+\end_layout
+
+\begin_layout Standard
+
+ * Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ * < vicente@jdalmau.es >
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * Implementation of the A* (A Star) algorithm.
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+package travelingsalesman;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+import java.util.ArrayList;
+\end_layout
+
+\begin_layout Standard
+
+import java.util.Comparator;
+\end_layout
+
+\begin_layout Standard
+
+import java.util.PriorityQueue;
+\end_layout
+
+\begin_layout Standard
+
+import java.util.Vector;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+/**
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * @author Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+public class AStar {
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    RoutesMatrix distances;
+\end_layout
+
+\begin_layout Standard
+
+    int sourceCity;
+\end_layout
+
+\begin_layout Standard
+
+    PriorityQueue<Town> opened = new PriorityQueue<Town>(1000, 
+\end_layout
+
+\begin_layout Standard
+
+        new Comparator<Town>() {
+\end_layout
+
+\begin_layout Standard
+
+          public int compare(Town a, Town b) {
+\end_layout
+
+\begin_layout Standard
+
+            return a.f - b.f;
+\end_layout
+
+\begin_layout Standard
+
+          }
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+      );  
+\end_layout
+
+\begin_layout Standard
+
+    String result = new String();
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    ArrayList optimumRoute;
+\end_layout
+
+\begin_layout Standard
+
+    int nodes = 0;
+\end_layout
+
+\begin_layout Standard
+
+    int optimumCost = Integer.MAX_VALUE;     
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    // Estimation of the cost between two cities, it can overestimate the
+ real value (h' > h),
+\end_layout
+
+\begin_layout Standard
+
+    // so the algorithm it's not optimum.
+\end_layout
+
+\begin_layout Standard
+
+    int HEURISTICCONSTANT = 15;
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * Gets the heuristic value for a given depth
+\end_layout
+
+\begin_layout Standard
+
+     * The level 0 has the maximum value.
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    private int getHeuristicValue (int level) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        return HEURISTICCONSTANT * (distances.getCitiesCount() - level);
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /** Creates a new instance of AStar */
+\end_layout
+
+\begin_layout Standard
+
+    public AStar(RoutesMatrix matrix, int sourceCity) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        distances = matrix;
+\end_layout
+
+\begin_layout Standard
+
+        this.sourceCity = sourceCity;        
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * executes the algorithm
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public String execute() {
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        // have we found the solution?
+\end_layout
+
+\begin_layout Standard
+
+        boolean solution = false;
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        // start the timer
+\end_layout
+
+\begin_layout Standard
+
+        long startTime = System.currentTimeMillis();
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        // initial town
+\end_layout
+
+\begin_layout Standard
+
+        opened.add(new Town(sourceCity, 0, getHeuristicValue(0), 0));
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        while (!opened.isEmpty() && !solution) {
+\end_layout
+
+\begin_layout Standard
+
+            // gets the city with lower g value
+\end_layout
+
+\begin_layout Standard
+
+            Town currentTown = opened.poll();
+\end_layout
+
+\begin_layout Standard
+
+            nodes++;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+            // rebuild the followed route for the selected town
+\end_layout
+
+\begin_layout Standard
+
+            Town aux = currentTown;
+\end_layout
+
+\begin_layout Standard
+
+            ArrayList followedRoute = new ArrayList();
+\end_layout
+
+\begin_layout Standard
+
+            followedRoute.add(aux.number);
+\end_layout
+
+\begin_layout Standard
+
+            while (aux.level != 0) {
+\end_layout
+
+\begin_layout Standard
+
+                aux = aux.parent;
+\end_layout
+
+\begin_layout Standard
+
+                followedRoute.add(0, aux.number);
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+            
+\end_layout
+
+\begin_layout Standard
+
+            if (currentTown.level == distances.getCitiesCount()) {
+\end_layout
+
+\begin_layout Standard
+
+                solution = true;
+\end_layout
+
+\begin_layout Standard
+
+                optimumRoute = followedRoute;
+\end_layout
+
+\begin_layout Standard
+
+                optimumCost = currentTown.g;
+\end_layout
+
+\begin_layout Standard
+
+            } else {
+\end_layout
+
+\begin_layout Standard
+
+                
+\end_layout
+
+\begin_layout Standard
+
+                for (int i=0; i<distances.getCitiesCount(); i++) {
+\end_layout
+
+\begin_layout Standard
+
+                    // have we visited this city in the current followed
+ route?
+\end_layout
+
+\begin_layout Standard
+
+                    boolean visited = followedRoute.contains(i);
+\end_layout
+
+\begin_layout Standard
+
+                    boolean isSolution = (followedRoute.size() == distances.getCit
+iesCount())&&(i == sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                    if (!visited || isSolution) {
+\end_layout
+
+\begin_layout Standard
+
+                        Town childTown = new Town(i, currentTown.g + distances.get
+Cost(currentTown.number, i), 
+\end_layout
+
+\begin_layout Standard
+
+                                getHeuristicValue(currentTown.level + 1),
+ currentTown.level + 1);
+\end_layout
+
+\begin_layout Standard
+
+                        childTown.parent = currentTown;
+\end_layout
+
+\begin_layout Standard
+
+                        opened.add(childTown);  
+\end_layout
+
+\begin_layout Standard
+
+                    }
+\end_layout
+
+\begin_layout Standard
+
+                }                
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+        long endTime = System.currentTimeMillis();
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        result = "-------------------------------------
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result +=  "A ESTRELLA:
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "-------------------------------------
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "MEJOR SOLUCIÓN: 
+\backslash
+t"+optimumRoute.toString() + "
+\backslash
+nCOSTE: 
+\backslash
+t
+\backslash
+t"+optimumCost+"
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "NODOS VISITADOS: 
+\backslash
+t"+nodes+"
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "TIEMPO TRANSCURRIDO: 
+\backslash
+t"+(endTime-startTime)+" ms
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "-------------------------------------
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        return result;        
+\end_layout
+
+\begin_layout Standard
+
+    }    
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+BranchAndBound
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,language=Java,numbers=left"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * BranchAndBound.java
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedDate: 2008-03-30 22:35:24 +0200 (dom, 30 mar 2008) $
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedRevision: 15 $
+\end_layout
+
+\begin_layout Standard
+
+ * Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ * < vicente@jdalmau.es >
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * Implementation of the branch and bound search algorithm.
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+package travelingsalesman;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+import java.util.ArrayList;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+/**
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * @author Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+public class BranchAndBound {
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    RoutesMatrix distances;
+\end_layout
+
+\begin_layout Standard
+
+    int sourceCity;
+\end_layout
+
+\begin_layout Standard
+
+    String result = new String();
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    ArrayList initialRoute, optimumRoute;
+\end_layout
+
+\begin_layout Standard
+
+    int nodes = 0;
+\end_layout
+
+\begin_layout Standard
+
+    int routeCost = 0;
+\end_layout
+
+\begin_layout Standard
+
+    int optimumCost = Integer.MAX_VALUE;    
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /** Creates a new instance of BranchAndBound */
+\end_layout
+
+\begin_layout Standard
+
+    public BranchAndBound(RoutesMatrix matrix, int sourceCity) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        distances = matrix;
+\end_layout
+
+\begin_layout Standard
+
+        this.sourceCity = sourceCity;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * executes the algorithm
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public String execute () {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        initialRoute = new ArrayList();
+\end_layout
+
+\begin_layout Standard
+
+        initialRoute.add(sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        optimumRoute = new ArrayList();
+\end_layout
+
+\begin_layout Standard
+
+        nodes++;        
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        result = "-------------------------------------
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result +=  "RAMIFICACIÓN Y PODA:
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "-------------------------------------
+\backslash
+n";        
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        long startTime = System.currentTimeMillis();
+\end_layout
+
+\begin_layout Standard
+
+        search(sourceCity, initialRoute);
+\end_layout
+
+\begin_layout Standard
+
+        long endTime = System.currentTimeMillis();        
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        result += "MEJOR SOLUCIÓN: 
+\backslash
+t"+optimumRoute.toString() + "
+\backslash
+nCOSTE: 
+\backslash
+t
+\backslash
+t"+optimumCost+"
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "NODOS VISITADOS: 
+\backslash
+t"+nodes+"
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "TIEMPO TRANSCURRIDO: 
+\backslash
+t"+(endTime-startTime)+" ms
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "-------------------------------------
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        return result;         
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * @param from node where we start the search.
+\end_layout
+
+\begin_layout Standard
+
+     * @param route followed route for arriving to node "from".
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public void search (int from, ArrayList followedRoute) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        // we've found a new solution
+\end_layout
+
+\begin_layout Standard
+
+        if (followedRoute.size() == distances.getCitiesCount()) {
+\end_layout
+
+\begin_layout Standard
+
+            
+\end_layout
+
+\begin_layout Standard
+
+            followedRoute.add(sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+            nodes++;
+\end_layout
+
+\begin_layout Standard
+
+            
+\end_layout
+
+\begin_layout Standard
+
+            // update the route's cost
+\end_layout
+
+\begin_layout Standard
+
+            routeCost += distances.getCost(from, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+            
+\end_layout
+
+\begin_layout Standard
+
+            if (routeCost < optimumCost) {
+\end_layout
+
+\begin_layout Standard
+
+                optimumCost = routeCost;
+\end_layout
+
+\begin_layout Standard
+
+                optimumRoute = (ArrayList)followedRoute.clone();
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+            
+\end_layout
+
+\begin_layout Standard
+
+            // DEBUG
+\end_layout
+
+\begin_layout Standard
+
+            //result += followedRoute.toString() + "// COSTE: "+routeCost
+ + "
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+            
+\end_layout
+
+\begin_layout Standard
+
+            // update the route's cost (back to the previous value)
+\end_layout
+
+\begin_layout Standard
+
+            routeCost -= distances.getCost(from, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+        else {
+\end_layout
+
+\begin_layout Standard
+
+            for (int to=0; to<distances.getCitiesCount(); to++){
+\end_layout
+
+\begin_layout Standard
+
+                if (!followedRoute.contains(to)) {
+\end_layout
+
+\begin_layout Standard
+
+                    
+\end_layout
+
+\begin_layout Standard
+
+                    // update the route's cost
+\end_layout
+
+\begin_layout Standard
+
+                    routeCost += distances.getCost(from, to);
+\end_layout
+
+\begin_layout Standard
+
+                    
+\end_layout
+
+\begin_layout Standard
+
+                    if (routeCost < optimumCost) { 
+\end_layout
+
+\begin_layout Standard
+
+                        ArrayList increasedRoute = (ArrayList)followedRoute.clone
+();
+\end_layout
+
+\begin_layout Standard
+
+                        increasedRoute.add(to);
+\end_layout
+
+\begin_layout Standard
+
+                        nodes++;
+\end_layout
+
+\begin_layout Standard
+
+                        search(to, increasedRoute);    
+\end_layout
+
+\begin_layout Standard
+
+                    }
+\end_layout
+
+\begin_layout Standard
+
+                    
+\end_layout
+
+\begin_layout Standard
+
+                    // update the route's cost (back to the previous value)
+\end_layout
+
+\begin_layout Standard
+
+                    routeCost -= distances.getCost(from, to);
+\end_layout
+
+\begin_layout Standard
+
+                }
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        }        
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+DepthFirstSearch
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,language=Java,numbers=left"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * DepthFirstSearch.java
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedDate: 2008-03-30 22:35:24 +0200 (dom, 30 mar 2008) $
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedRevision: 15 $
+\end_layout
+
+\begin_layout Standard
+
+ * Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ * < vicente@jdalmau.es >
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * Implementation of the depth first search algorithm.
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+package travelingsalesman;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+import java.util.ArrayList;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+/**
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * @author Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+public class DepthFirstSearch {
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    RoutesMatrix distances;
+\end_layout
+
+\begin_layout Standard
+
+    int sourceCity;
+\end_layout
+
+\begin_layout Standard
+
+    String result = new String();
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    ArrayList initialRoute, optimumRoute;
+\end_layout
+
+\begin_layout Standard
+
+    int nodes = 0;
+\end_layout
+
+\begin_layout Standard
+
+    int routeCost = 0;
+\end_layout
+
+\begin_layout Standard
+
+    int optimumCost = Integer.MAX_VALUE;
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /** Creates a new instance of DepthFirstSearch */
+\end_layout
+
+\begin_layout Standard
+
+    public DepthFirstSearch(RoutesMatrix matrix, int sourceCity) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        distances = matrix;
+\end_layout
+
+\begin_layout Standard
+
+        this.sourceCity = sourceCity;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * executes the algorithm
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public String execute () {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        initialRoute = new ArrayList();
+\end_layout
+
+\begin_layout Standard
+
+        initialRoute.add(sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        optimumRoute = new ArrayList();
+\end_layout
+
+\begin_layout Standard
+
+        nodes++;
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        result = "-------------------------------------
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result +=  "PRIMERO EN PROFUNDIDAD:
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "-------------------------------------
+\backslash
+n";        
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        long startTime = System.currentTimeMillis();
+\end_layout
+
+\begin_layout Standard
+
+        search(sourceCity, initialRoute);
+\end_layout
+
+\begin_layout Standard
+
+        long endTime = System.currentTimeMillis();
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        result += "MEJOR SOLUCIÓN: 
+\backslash
+t"+optimumRoute.toString() + "
+\backslash
+nCOSTE: 
+\backslash
+t
+\backslash
+t"+optimumCost+"
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "NODOS VISITADOS: 
+\backslash
+t"+nodes+"
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "TIEMPO TRANSCURRIDO: 
+\backslash
+t"+(endTime-startTime)+" ms
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "-------------------------------------
+\backslash
+n";        
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        return result;         
+\end_layout
+
+\begin_layout Standard
+
+    }    
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * @param from node where we start the search.
+\end_layout
+
+\begin_layout Standard
+
+     * @param route followed route for arriving to node "from".
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public void search (int from, ArrayList followedRoute) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        // we've found a new solution
+\end_layout
+
+\begin_layout Standard
+
+        if (followedRoute.size() == distances.getCitiesCount()) {
+\end_layout
+
+\begin_layout Standard
+
+            
+\end_layout
+
+\begin_layout Standard
+
+            followedRoute.add(sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+            nodes++;
+\end_layout
+
+\begin_layout Standard
+
+            
+\end_layout
+
+\begin_layout Standard
+
+            // update the route's cost
+\end_layout
+
+\begin_layout Standard
+
+            routeCost += distances.getCost(from, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+            
+\end_layout
+
+\begin_layout Standard
+
+            if (routeCost < optimumCost) {
+\end_layout
+
+\begin_layout Standard
+
+                optimumCost = routeCost;
+\end_layout
+
+\begin_layout Standard
+
+                optimumRoute = (ArrayList)followedRoute.clone();
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+            
+\end_layout
+
+\begin_layout Standard
+
+            // DEBUG
+\end_layout
+
+\begin_layout Standard
+
+            //result += followedRoute.toString() + "// COSTE: "+routeCost
+ + "
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+            
+\end_layout
+
+\begin_layout Standard
+
+            // update the route's cost (back to the previous value)
+\end_layout
+
+\begin_layout Standard
+
+            routeCost -= distances.getCost(from, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+        else {
+\end_layout
+
+\begin_layout Standard
+
+            for (int to=0; to<distances.getCitiesCount(); to++){
+\end_layout
+
+\begin_layout Standard
+
+                if (!followedRoute.contains(to)) {
+\end_layout
+
+\begin_layout Standard
+
+                    
+\end_layout
+
+\begin_layout Standard
+
+                    ArrayList increasedRoute = (ArrayList)followedRoute.clone();
+\end_layout
+
+\begin_layout Standard
+
+                    increasedRoute.add(to);
+\end_layout
+
+\begin_layout Standard
+
+                    nodes++;
+\end_layout
+
+\begin_layout Standard
+
+                    
+\end_layout
+
+\begin_layout Standard
+
+                    // update the route's cost
+\end_layout
+
+\begin_layout Standard
+
+                    routeCost += distances.getCost(from, to);
+\end_layout
+
+\begin_layout Standard
+
+                    
+\end_layout
+
+\begin_layout Standard
+
+                    search(to, increasedRoute);
+\end_layout
+
+\begin_layout Standard
+
+                    
+\end_layout
+
+\begin_layout Standard
+
+                    // update the route's cost (back to the previous value)
+\end_layout
+
+\begin_layout Standard
+
+                    routeCost -= distances.getCost(from, to);
+\end_layout
+
+\begin_layout Standard
+
+                }
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        }        
+\end_layout
+
+\begin_layout Standard
+
+    }    
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+HillClimbing
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,language=Java,numbers=left"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * HillClimbing.java
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedDate: 2008-03-30 20:41:41 +0200 (dom, 30 mar 2008) $
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedRevision: 14 $
+\end_layout
+
+\begin_layout Standard
+
+ * Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ * < vicente@jdalmau.es >
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * Implementation of the Hill Climbing algorithm (simple version).
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+package travelingsalesman;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+import java.util.ArrayList;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+/**
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * @author Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+public class HillClimbing {
+\end_layout
+
+\begin_layout Standard
+
+   
+\end_layout
+
+\begin_layout Standard
+
+    RoutesMatrix distances;
+\end_layout
+
+\begin_layout Standard
+
+    int sourceCity;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    String result = new String();
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    ArrayList followedRoute;
+\end_layout
+
+\begin_layout Standard
+
+    int nodes = 0;
+\end_layout
+
+\begin_layout Standard
+
+    int routeCost = 0;     
+\end_layout
+
+\begin_layout Standard
+
+   
+\end_layout
+
+\begin_layout Standard
+
+    int HEURISTICCONSTANT = 15;    
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * Gets the heuristic value for a given depth
+\end_layout
+
+\begin_layout Standard
+
+     * The level 0 has the maximum value.
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    private int getHeuristicValue (int level) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        return HEURISTICCONSTANT * (distances.getCitiesCount() - level);
+\end_layout
+
+\begin_layout Standard
+
+    }    
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /** Creates a new instance of HillClimbing */
+\end_layout
+
+\begin_layout Standard
+
+    public HillClimbing(RoutesMatrix matrix, int sourceCity) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        distances = matrix;
+\end_layout
+
+\begin_layout Standard
+
+        this.sourceCity = sourceCity;        
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * executes the algorithm
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public String execute () {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        followedRoute = new ArrayList();
+\end_layout
+
+\begin_layout Standard
+
+        followedRoute.add(sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        nodes++;
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        long startTime = System.currentTimeMillis();
+\end_layout
+
+\begin_layout Standard
+
+        search(sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        long endTime = System.currentTimeMillis();        
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        result = "-------------------------------------
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result +=  "MÉTODO DE ESCALADA:
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "-------------------------------------
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "MEJOR SOLUCIÓN: 
+\backslash
+t"+followedRoute.toString() + "
+\backslash
+nCOSTE: 
+\backslash
+t
+\backslash
+t"+routeCost+"
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "NODOS VISITADOS: 
+\backslash
+t"+nodes+"
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "TIEMPO TRANSCURRIDO: 
+\backslash
+t"+(endTime-startTime)+" ms
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "-------------------------------------
+\backslash
+n";        
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        return result;         
+\end_layout
+
+\begin_layout Standard
+
+    }  
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * @param from node where we start the search.
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public void search (int from) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        int currentTown = from;
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        while (nodes != distances.getCitiesCount()) {
+\end_layout
+
+\begin_layout Standard
+
+            // choose the closest town
+\end_layout
+
+\begin_layout Standard
+
+            int lowestDistance = Integer.MAX_VALUE;
+\end_layout
+
+\begin_layout Standard
+
+            int chosen = -1;
+\end_layout
+
+\begin_layout Standard
+
+            for (int i=0; i < distances.getCitiesCount(); i++) {
+\end_layout
+
+\begin_layout Standard
+
+                if (!followedRoute.contains(i)) {
+\end_layout
+
+\begin_layout Standard
+
+                    int tempDistance = routeCost + getHeuristicValue(nodes-1);
+ // f = g + h
+\end_layout
+
+\begin_layout Standard
+
+                    if (tempDistance < lowestDistance) {
+\end_layout
+
+\begin_layout Standard
+
+                        lowestDistance = tempDistance;
+\end_layout
+
+\begin_layout Standard
+
+                        chosen = i;
+\end_layout
+
+\begin_layout Standard
+
+                    }
+\end_layout
+
+\begin_layout Standard
+
+                }
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+            routeCost += distances.getCost(currentTown, chosen);
+\end_layout
+
+\begin_layout Standard
+
+            followedRoute.add(chosen);
+\end_layout
+
+\begin_layout Standard
+
+            currentTown = chosen;
+\end_layout
+
+\begin_layout Standard
+
+            nodes++;
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+        // add the last town
+\end_layout
+
+\begin_layout Standard
+
+        routeCost += distances.getCost(currentTown, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        followedRoute.add(sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        nodes++;
+\end_layout
+
+\begin_layout Standard
+
+    }         
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Main
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,language=Java,numbers=left"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * Main.java
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedDate: 2008-04-01 01:27:52 +0200 (mar, 01 abr 2008) $
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedRevision: 22 $
+\end_layout
+
+\begin_layout Standard
+
+ * Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ * < vicente@jdalmau.es >
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+package travelingsalesman;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+import javax.swing.table.DefaultTableModel;
+\end_layout
+
+\begin_layout Standard
+
+import java.awt.*;
+\end_layout
+
+\begin_layout Standard
+
+import java.awt.event.*;
+\end_layout
+
+\begin_layout Standard
+
+import javax.swing.*;
+\end_layout
+
+\begin_layout Standard
+
+import javax.swing.table.*;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+/**
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * @author Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+public class Main extends javax.swing.JFrame {
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    static RoutesMatrix routes;
+\end_layout
+
+\begin_layout Standard
+
+    int sourceCity = 0;
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /** Creates new form Main */
+\end_layout
+
+\begin_layout Standard
+
+    public Main() {
+\end_layout
+
+\begin_layout Standard
+
+        initComponents();
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        // init the routes matrix
+\end_layout
+
+\begin_layout Standard
+
+        routes = new RoutesMatrix(4);
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        // init the cities checkbox
+\end_layout
+
+\begin_layout Standard
+
+        for (int i = 2; i <= 100; i++)
+\end_layout
+
+\begin_layout Standard
+
+            jComboBox1.addItem(i);
+\end_layout
+
+\begin_layout Standard
+
+        for (int i = 2; i <= 10; i++)
+\end_layout
+
+\begin_layout Standard
+
+            jComboBox1.addItem(i*100);
+\end_layout
+
+\begin_layout Standard
+
+        for (int i = 0; i <= 3; i++)
+\end_layout
+
+\begin_layout Standard
+
+            jComboBox2.addItem(i);
+\end_layout
+
+\begin_layout Standard
+
+        jComboBox1.setSelectedIndex(2);
+\end_layout
+
+\begin_layout Standard
+
+        jComboBox2.setSelectedIndex(0);
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        // configure the JTable to display de routes matrix
+\end_layout
+
+\begin_layout Standard
+
+        routes.drawJTable(jTable1);
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /** This method is called from within the constructor to
+\end_layout
+
+\begin_layout Standard
+
+     * initialize the form.
+\end_layout
+
+\begin_layout Standard
+
+     * WARNING: Do NOT modify this code.
+ The content of this method is
+\end_layout
+
+\begin_layout Standard
+
+     * always regenerated by the Form Editor.
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    // <editor-fold defaultstate="collapsed" desc=" Generated Code ">//GEN-BEGIN
+:initComponents
+\end_layout
+
+\begin_layout Standard
+
+    private void initComponents() {
+\end_layout
+
+\begin_layout Standard
+
+        jPanel1 = new javax.swing.JPanel();
+\end_layout
+
+\begin_layout Standard
+
+        jScrollPane2 = new javax.swing.JScrollPane();
+\end_layout
+
+\begin_layout Standard
+
+        jTable1 = new javax.swing.JTable();
+\end_layout
+
+\begin_layout Standard
+
+        jButton6 = new javax.swing.JButton();
+\end_layout
+
+\begin_layout Standard
+
+        jButton7 = new javax.swing.JButton();
+\end_layout
+
+\begin_layout Standard
+
+        jComboBox1 = new javax.swing.JComboBox();
+\end_layout
+
+\begin_layout Standard
+
+        jLabel1 = new javax.swing.JLabel();
+\end_layout
+
+\begin_layout Standard
+
+        jLabel2 = new javax.swing.JLabel();
+\end_layout
+
+\begin_layout Standard
+
+        jComboBox2 = new javax.swing.JComboBox();
+\end_layout
+
+\begin_layout Standard
+
+        jPanel2 = new javax.swing.JPanel();
+\end_layout
+
+\begin_layout Standard
+
+        jButton1 = new javax.swing.JButton();
+\end_layout
+
+\begin_layout Standard
+
+        jButton2 = new javax.swing.JButton();
+\end_layout
+
+\begin_layout Standard
+
+        jButton3 = new javax.swing.JButton();
+\end_layout
+
+\begin_layout Standard
+
+        jPanel3 = new javax.swing.JPanel();
+\end_layout
+
+\begin_layout Standard
+
+        jButton4 = new javax.swing.JButton();
+\end_layout
+
+\begin_layout Standard
+
+        jButton5 = new javax.swing.JButton();
+\end_layout
+
+\begin_layout Standard
+
+        jButton8 = new javax.swing.JButton();
+\end_layout
+
+\begin_layout Standard
+
+        jPanel4 = new javax.swing.JPanel();
+\end_layout
+
+\begin_layout Standard
+
+        jScrollPane1 = new javax.swing.JScrollPane();
+\end_layout
+
+\begin_layout Standard
+
+        jTextArea1 = new javax.swing.JTextArea();
+\end_layout
+
+\begin_layout Standard
+
+        jPanel5 = new javax.swing.JPanel();
+\end_layout
+
+\begin_layout Standard
+
+        jButton9 = new javax.swing.JButton();
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+\end_layout
+
+\begin_layout Standard
+
+        setTitle("IA - El Viajante de Comercio (Vicente J.
+ Ferrer Dalmau)");
+\end_layout
+
+\begin_layout Standard
+
+        setBackground(new java.awt.Color(255, 255, 255));
+\end_layout
+
+\begin_layout Standard
+
+        setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+\end_layout
+
+\begin_layout Standard
+
+        setResizable(false);
+\end_layout
+
+\begin_layout Standard
+
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Configurar
+ Ciudades"));
+\end_layout
+
+\begin_layout Standard
+
+        jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HO
+RIZONTAL_SCROLLBAR_ALWAYS);
+\end_layout
+
+\begin_layout Standard
+
+        jScrollPane2.setAutoscrolls(true);
+\end_layout
+
+\begin_layout Standard
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+\end_layout
+
+\begin_layout Standard
+
+            new Object [][] {
+\end_layout
+
+\begin_layout Standard
+
+                {null, null, null, null},
+\end_layout
+
+\begin_layout Standard
+
+                {null, null, null, null},
+\end_layout
+
+\begin_layout Standard
+
+                {null, null, null, null},
+\end_layout
+
+\begin_layout Standard
+
+                {null, null, null, null}
+\end_layout
+
+\begin_layout Standard
+
+            },
+\end_layout
+
+\begin_layout Standard
+
+            new String [] {
+\end_layout
+
+\begin_layout Standard
+
+                "Title 1", "Title 2", "Title 3", "Title 4"
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        ));
+\end_layout
+
+\begin_layout Standard
+
+        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+\end_layout
+
+\begin_layout Standard
+
+        jScrollPane2.setViewportView(jTable1);
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(1
+0, 20, 870, 200));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jButton6.setText("Regenerar Matriz");
+\end_layout
+
+\begin_layout Standard
+
+        jButton6.addMouseListener(new java.awt.event.MouseAdapter() {
+\end_layout
+
+\begin_layout Standard
+
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+\end_layout
+
+\begin_layout Standard
+
+                jButton6MouseClicked(evt);
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        });
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(590,
+ 230, -1, -1));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jButton7.setText("Modificar distancias");
+\end_layout
+
+\begin_layout Standard
+
+        jButton7.addMouseListener(new java.awt.event.MouseAdapter() {
+\end_layout
+
+\begin_layout Standard
+
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+\end_layout
+
+\begin_layout Standard
+
+                jButton7MouseClicked(evt);
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        });
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(730,
+ 230, 150, -1));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+\end_layout
+
+\begin_layout Standard
+
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+\end_layout
+
+\begin_layout Standard
+
+                jComboBox1ItemStateChanged(evt);
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        });
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel1.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90,
+ 230, -1, -1));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jLabel1.setText("N
+\backslash
+u00ba Ciudades:");
+\end_layout
+
+\begin_layout Standard
+
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10,
+ 230, -1, 20));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jLabel2.setText("Ciudad inicial:");
+\end_layout
+
+\begin_layout Standard
+
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160,
+ 230, 80, 20));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jComboBox2.addItemListener(new java.awt.event.ItemListener() {
+\end_layout
+
+\begin_layout Standard
+
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+\end_layout
+
+\begin_layout Standard
+
+                jComboBox2ItemStateChanged(evt);
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        });
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel1.add(jComboBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250
+, 230, -1, -1));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstrain
+ts(0, 0, 890, 270));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("B
+\backslash
+u00fasqueda No Informada"));
+\end_layout
+
+\begin_layout Standard
+
+        jButton1.setText("Primero en profundidad");
+\end_layout
+
+\begin_layout Standard
+
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+\end_layout
+
+\begin_layout Standard
+
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+\end_layout
+
+\begin_layout Standard
+
+                jButton1MouseClicked(evt);
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        });
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10,
+ 20, 170, -1));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jButton2.setText("Ramificaci
+\backslash
+u00f3n y poda");
+\end_layout
+
+\begin_layout Standard
+
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+\end_layout
+
+\begin_layout Standard
+
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+\end_layout
+
+\begin_layout Standard
+
+                jButton2MouseClicked(evt);
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        });
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190,
+ 20, 150, -1));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jButton3.setText("Costo uniforme");
+\end_layout
+
+\begin_layout Standard
+
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+\end_layout
+
+\begin_layout Standard
+
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+\end_layout
+
+\begin_layout Standard
+
+                jButton3MouseClicked(evt);
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        });
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel2.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(350,
+ 20, 140, -1));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstrain
+ts(0, 480, 500, 60));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("B
+\backslash
+u00fasqueda Informada"));
+\end_layout
+
+\begin_layout Standard
+
+        jButton4.setText("Vecino m
+\backslash
+u00e1s pr
+\backslash
+u00f3ximo");
+\end_layout
+
+\begin_layout Standard
+
+        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+\end_layout
+
+\begin_layout Standard
+
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+\end_layout
+
+\begin_layout Standard
+
+                jButton4MouseClicked(evt);
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        });
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel3.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(100,
+ 20, 170, -1));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jButton5.setText("A*");
+\end_layout
+
+\begin_layout Standard
+
+        jButton5.addMouseListener(new java.awt.event.MouseAdapter() {
+\end_layout
+
+\begin_layout Standard
+
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+\end_layout
+
+\begin_layout Standard
+
+                jButton5MouseClicked(evt);
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        });
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel3.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10,
+ 20, 80, -1));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jButton8.setText("Escalada");
+\end_layout
+
+\begin_layout Standard
+
+        jButton8.addMouseListener(new java.awt.event.MouseAdapter() {
+\end_layout
+
+\begin_layout Standard
+
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+\end_layout
+
+\begin_layout Standard
+
+                jButton8MouseClicked(evt);
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        });
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel3.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(280,
+ 20, 100, -1));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstrain
+ts(500, 480, 390, 60));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Resultados")
+);
+\end_layout
+
+\begin_layout Standard
+
+        jTextArea1.setColumns(20);
+\end_layout
+
+\begin_layout Standard
+
+        jTextArea1.setEditable(false);
+\end_layout
+
+\begin_layout Standard
+
+        jTextArea1.setRows(5);
+\end_layout
+
+\begin_layout Standard
+
+        jScrollPane1.setViewportView(jTextArea1);
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1
+0, 20, 870, 180));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstrain
+ts(0, 270, 890, 210));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("B
+\backslash
+u00fasqueda No Informada & Informada"));
+\end_layout
+
+\begin_layout Standard
+
+        jButton9.setText("Todo");
+\end_layout
+
+\begin_layout Standard
+
+        jButton9.addMouseListener(new java.awt.event.MouseAdapter() {
+\end_layout
+
+\begin_layout Standard
+
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+\end_layout
+
+\begin_layout Standard
+
+                jButton9MouseClicked(evt);
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        });
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        jPanel5.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(400,
+ 20, 100, -1));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        getContentPane().add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstrain
+ts(0, 540, 890, 60));
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        pack();
+\end_layout
+
+\begin_layout Standard
+
+    }// </editor-fold>//GEN-END:initComponents
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    private void jButton9MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
+vent_jButton9MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        try {
+\end_layout
+
+\begin_layout Standard
+
+            DepthFirstSearch s1 = new DepthFirstSearch(routes, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+            jTextArea1.setText(s1.execute());
+\end_layout
+
+\begin_layout Standard
+
+            BranchAndBound s2 = new BranchAndBound(routes, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+            jTextArea1.setText(jTextArea1.getText() + s2.execute());
+\end_layout
+
+\begin_layout Standard
+
+            UniformCost s3 = new UniformCost(routes, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+            jTextArea1.setText(jTextArea1.getText() + s3.execute());
+\end_layout
+
+\begin_layout Standard
+
+            AStar s6 = new AStar(routes, sourceCity);        
+\end_layout
+
+\begin_layout Standard
+
+            jTextArea1.setText(jTextArea1.getText() + s6.execute());      
+          
+\end_layout
+
+\begin_layout Standard
+
+            NearestNeighbour s4 = new NearestNeighbour(routes, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+            jTextArea1.setText(jTextArea1.getText() + s4.execute());
+\end_layout
+
+\begin_layout Standard
+
+            HillClimbing s5 = new HillClimbing(routes, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+            jTextArea1.setText(jTextArea1.getText() + s5.execute());
+\end_layout
+
+\begin_layout Standard
+
+        } catch (java.lang.OutOfMemoryError e) {
+\end_layout
+
+\begin_layout Standard
+
+                String msg = "La memoria no es suficiente para ejecutar
+ alguno de los métodos con las "+
+\end_layout
+
+\begin_layout Standard
+
+                        ((Integer)jComboBox1.getSelectedItem()).intValue()+"
+ ciudades generadas.";
+\end_layout
+
+\begin_layout Standard
+
+                JOptionPane.showMessageDialog(new JFrame(), msg, "Error",
+ JOptionPane.ERROR_MESSAGE);
+\end_layout
+
+\begin_layout Standard
+
+        }            
+\end_layout
+
+\begin_layout Standard
+
+                
+\end_layout
+
+\begin_layout Standard
+
+    }//GEN-LAST:event_jButton9MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
+RST:event_jComboBox1ItemStateChanged
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        if (evt.getStateChange() == evt.SELECTED) {
+\end_layout
+
+\begin_layout Standard
+
+            // new number of cities
+\end_layout
+
+\begin_layout Standard
+
+            int cities = ((Integer)jComboBox1.getSelectedItem()).intValue();
+\end_layout
+
+\begin_layout Standard
+
+            routes = new RoutesMatrix(cities);
+\end_layout
+
+\begin_layout Standard
+
+            routes.drawJTable(jTable1);
+\end_layout
+
+\begin_layout Standard
+
+            // alter the 2nd comboBox (source city)
+\end_layout
+
+\begin_layout Standard
+
+            jComboBox2.removeAllItems();
+\end_layout
+
+\begin_layout Standard
+
+            for (int i=0; i<cities; i++)
+\end_layout
+
+\begin_layout Standard
+
+                jComboBox2.addItem(i);
+\end_layout
+
+\begin_layout Standard
+
+            jComboBox2.setSelectedIndex(0);
+\end_layout
+
+\begin_layout Standard
+
+        }        
+\end_layout
+
+\begin_layout Standard
+
+    }//GEN-LAST:event_jComboBox1ItemStateChanged
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    private void jComboBox2ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FI
+RST:event_jComboBox2ItemStateChanged
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        if (evt.getStateChange() == evt.SELECTED) {
+\end_layout
+
+\begin_layout Standard
+
+            // select the new source city
+\end_layout
+
+\begin_layout Standard
+
+            sourceCity = ((Integer)jComboBox2.getSelectedItem()).intValue();
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+    }//GEN-LAST:event_jComboBox2ItemStateChanged
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    private void jButton8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
+vent_jButton8MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        try {
+\end_layout
+
+\begin_layout Standard
+
+        HillClimbing s = new HillClimbing(routes, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        jTextArea1.setText(s.execute());
+\end_layout
+
+\begin_layout Standard
+
+        } catch (java.lang.OutOfMemoryError e) {
+\end_layout
+
+\begin_layout Standard
+
+                String msg = "La memoria no es suficiente para ejecutar
+ el Método de Escalada con las "+
+\end_layout
+
+\begin_layout Standard
+
+                        ((Integer)jComboBox1.getSelectedItem()).intValue()+"
+ ciudades generadas.";
+\end_layout
+
+\begin_layout Standard
+
+                JOptionPane.showMessageDialog(new JFrame(), msg, "Error",
+ JOptionPane.ERROR_MESSAGE);
+\end_layout
+
+\begin_layout Standard
+
+        }        
+\end_layout
+
+\begin_layout Standard
+
+    }//GEN-LAST:event_jButton8MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
+vent_jButton4MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        try {
+\end_layout
+
+\begin_layout Standard
+
+        NearestNeighbour s = new NearestNeighbour(routes, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        jTextArea1.setText(s.execute());
+\end_layout
+
+\begin_layout Standard
+
+        } catch (java.lang.OutOfMemoryError e) {
+\end_layout
+
+\begin_layout Standard
+
+                String msg = "La memoria no es suficiente para ejecutar
+ la búsqueda del Vecino más Proximo con las "+
+\end_layout
+
+\begin_layout Standard
+
+                        ((Integer)jComboBox1.getSelectedItem()).intValue()+"
+ ciudades generadas.";
+\end_layout
+
+\begin_layout Standard
+
+                JOptionPane.showMessageDialog(new JFrame(), msg, "Error",
+ JOptionPane.ERROR_MESSAGE);
+\end_layout
+
+\begin_layout Standard
+
+        }        
+\end_layout
+
+\begin_layout Standard
+
+    }//GEN-LAST:event_jButton4MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    private void jButton5MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
+vent_jButton5MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        try {
+\end_layout
+
+\begin_layout Standard
+
+        AStar s = new AStar(routes, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        jTextArea1.setText(s.execute());        
+\end_layout
+
+\begin_layout Standard
+
+        } catch (java.lang.OutOfMemoryError e) {
+\end_layout
+
+\begin_layout Standard
+
+                String msg = "La memoria no es suficiente para ejecutar
+ la búsqueda A Estrella con las "+
+\end_layout
+
+\begin_layout Standard
+
+                        ((Integer)jComboBox1.getSelectedItem()).intValue()+"
+ ciudades generadas.";
+\end_layout
+
+\begin_layout Standard
+
+                JOptionPane.showMessageDialog(new JFrame(), msg, "Error",
+ JOptionPane.ERROR_MESSAGE);
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+    }//GEN-LAST:event_jButton5MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
+vent_jButton3MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        try {
+\end_layout
+
+\begin_layout Standard
+
+        UniformCost s = new UniformCost(routes, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        jTextArea1.setText(s.execute());
+\end_layout
+
+\begin_layout Standard
+
+        } catch (java.lang.OutOfMemoryError e) {
+\end_layout
+
+\begin_layout Standard
+
+                String msg = "La memoria no es suficiente para ejecutar
+ la búsqueda de Costo Uniforme con las "+
+\end_layout
+
+\begin_layout Standard
+
+                        ((Integer)jComboBox1.getSelectedItem()).intValue()+"
+ ciudades generadas.";
+\end_layout
+
+\begin_layout Standard
+
+                JOptionPane.showMessageDialog(new JFrame(), msg, "Error",
+ JOptionPane.ERROR_MESSAGE);
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+    }//GEN-LAST:event_jButton3MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
+vent_jButton2MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        try {
+\end_layout
+
+\begin_layout Standard
+
+        BranchAndBound s = new BranchAndBound(routes, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        jTextArea1.setText(s.execute());
+\end_layout
+
+\begin_layout Standard
+
+        } catch (java.lang.OutOfMemoryError e) {
+\end_layout
+
+\begin_layout Standard
+
+                String msg = "La memoria no es suficiente para ejecutar
+ la búsqueda con Ramificación y Poda con las "+
+\end_layout
+
+\begin_layout Standard
+
+                        ((Integer)jComboBox1.getSelectedItem()).intValue()+"
+ ciudades generadas.";
+\end_layout
+
+\begin_layout Standard
+
+                JOptionPane.showMessageDialog(new JFrame(), msg, "Error",
+ JOptionPane.ERROR_MESSAGE);
+\end_layout
+
+\begin_layout Standard
+
+        }        
+\end_layout
+
+\begin_layout Standard
+
+    }//GEN-LAST:event_jButton2MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    private void jButton7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
+vent_jButton7MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        // configure the JTable to display de routes matrix
+\end_layout
+
+\begin_layout Standard
+
+        for (int i=0; i<routes.getCitiesCount(); i++) {
+\end_layout
+
+\begin_layout Standard
+
+            for (int j=0; j<routes.getCitiesCount(); j++) {
+\end_layout
+
+\begin_layout Standard
+
+                int value = Integer.parseInt(jTable1.getValueAt(i, j+1).toString())
+;
+\end_layout
+
+\begin_layout Standard
+
+                if (value >= 0 && value <=routes.getMaxDistance()) {
+\end_layout
+
+\begin_layout Standard
+
+                    routes.setCost(i, j, value);
+\end_layout
+
+\begin_layout Standard
+
+                }
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        // regenerate the jTable
+\end_layout
+
+\begin_layout Standard
+
+        routes.drawJTable(jTable1);
+\end_layout
+
+\begin_layout Standard
+
+    }//GEN-LAST:event_jButton7MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    private void jButton6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
+vent_jButton6MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        int cities = ((Integer)jComboBox1.getItemAt(jComboBox1.getSelectedIndex())
+).intValue();
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+        routes = new RoutesMatrix(cities);
+\end_layout
+
+\begin_layout Standard
+
+        routes.drawJTable(jTable1);
+\end_layout
+
+\begin_layout Standard
+
+    }//GEN-LAST:event_jButton6MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:e
+vent_jButton1MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+        try {
+\end_layout
+
+\begin_layout Standard
+
+        DepthFirstSearch s = new DepthFirstSearch(routes, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        jTextArea1.setText(s.execute());
+\end_layout
+
+\begin_layout Standard
+
+        } catch (java.lang.OutOfMemoryError e) {
+\end_layout
+
+\begin_layout Standard
+
+                String msg = "La memoria no es suficiente para ejecutar
+ la búsqueda Primero en Profundidad con las "+
+\end_layout
+
+\begin_layout Standard
+
+                        ((Integer)jComboBox1.getSelectedItem()).intValue()+"
+ ciudades generadas.";
+\end_layout
+
+\begin_layout Standard
+
+                JOptionPane.showMessageDialog(new JFrame(), msg, "Error",
+ JOptionPane.ERROR_MESSAGE);
+\end_layout
+
+\begin_layout Standard
+
+        }        
+\end_layout
+
+\begin_layout Standard
+
+    }//GEN-LAST:event_jButton1MouseClicked
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    public void printResults(String results) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        jTextArea1.setText(results);
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * @param args the command line arguments
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public static void main(String args[]) {
+\end_layout
+
+\begin_layout Standard
+
+        java.awt.EventQueue.invokeLater(new Runnable() {
+\end_layout
+
+\begin_layout Standard
+
+            public void run() {
+\end_layout
+
+\begin_layout Standard
+
+                new Main().setVisible(true);
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        });
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JButton jButton1;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JButton jButton2;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JButton jButton3;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JButton jButton4;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JButton jButton5;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JButton jButton6;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JButton jButton7;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JButton jButton8;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JButton jButton9;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JComboBox jComboBox1;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JComboBox jComboBox2;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JLabel jLabel1;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JLabel jLabel2;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JPanel jPanel1;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JPanel jPanel2;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JPanel jPanel3;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JPanel jPanel4;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JPanel jPanel5;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JScrollPane jScrollPane1;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JScrollPane jScrollPane2;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JTable jTable1;
+\end_layout
+
+\begin_layout Standard
+
+    private javax.swing.JTextArea jTextArea1;
+\end_layout
+
+\begin_layout Standard
+
+    // End of variables declaration//GEN-END:variables
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+NearestNeighbour
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,language=Java,numbers=left"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * NearestNeighbour.java
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedDate: 2008-03-30 20:41:41 +0200 (dom, 30 mar 2008) $
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedRevision: 14 $
+\end_layout
+
+\begin_layout Standard
+
+ * Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ * < vicente@jdalmau.es >
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * Implementation of the Nearest Neighbour algorithm.
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+package travelingsalesman;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+import java.util.ArrayList;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+/**
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * @author Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+public class NearestNeighbour {
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    RoutesMatrix distances;
+\end_layout
+
+\begin_layout Standard
+
+    int sourceCity;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+    String result = new String();
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    ArrayList followedRoute;
+\end_layout
+
+\begin_layout Standard
+
+    int nodes = 0;
+\end_layout
+
+\begin_layout Standard
+
+    int routeCost = 0;   
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /** Creates a new instance of NearestNeighbour */
+\end_layout
+
+\begin_layout Standard
+
+    public NearestNeighbour(RoutesMatrix matrix, int sourceCity) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        distances = matrix;
+\end_layout
+
+\begin_layout Standard
+
+        this.sourceCity = sourceCity;        
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * executes the algorithm
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public String execute () {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        followedRoute = new ArrayList();
+\end_layout
+
+\begin_layout Standard
+
+        followedRoute.add(sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        nodes++;        
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        long startTime = System.currentTimeMillis();
+\end_layout
+
+\begin_layout Standard
+
+        search(sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        long endTime = System.currentTimeMillis();
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        result = "-------------------------------------
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result +=  "VECINO MÁS PRÓXIMO:
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "-------------------------------------
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "MEJOR SOLUCIÓN: 
+\backslash
+t"+followedRoute.toString() + "
+\backslash
+nCOSTE: 
+\backslash
+t
+\backslash
+t"+routeCost+"
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "NODOS VISITADOS: 
+\backslash
+t"+nodes+"
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "TIEMPO TRANSCURRIDO: 
+\backslash
+t"+(endTime-startTime)+" ms
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "-------------------------------------
+\backslash
+n";        
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        return result;         
+\end_layout
+
+\begin_layout Standard
+
+    }   
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * @param from node where we start the search.
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public void search (int from) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        int currentTown = from;
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        while (nodes != distances.getCitiesCount()) {
+\end_layout
+
+\begin_layout Standard
+
+            // choose the closest town
+\end_layout
+
+\begin_layout Standard
+
+            int lowestDistance = Integer.MAX_VALUE;
+\end_layout
+
+\begin_layout Standard
+
+            int chosen = -1;
+\end_layout
+
+\begin_layout Standard
+
+            for (int i=0; i < distances.getCitiesCount(); i++) {
+\end_layout
+
+\begin_layout Standard
+
+                if (!followedRoute.contains(i)) {
+\end_layout
+
+\begin_layout Standard
+
+                    int tempDistance = distances.getCost(currentTown, i);
+\end_layout
+
+\begin_layout Standard
+
+                    if (tempDistance < lowestDistance) {
+\end_layout
+
+\begin_layout Standard
+
+                        lowestDistance = tempDistance;
+\end_layout
+
+\begin_layout Standard
+
+                        chosen = i;
+\end_layout
+
+\begin_layout Standard
+
+                    }
+\end_layout
+
+\begin_layout Standard
+
+                }
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+            routeCost += distances.getCost(currentTown, chosen);
+\end_layout
+
+\begin_layout Standard
+
+            followedRoute.add(chosen);
+\end_layout
+
+\begin_layout Standard
+
+            currentTown = chosen;
+\end_layout
+
+\begin_layout Standard
+
+            nodes++;
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+        // add the last town
+\end_layout
+
+\begin_layout Standard
+
+        routeCost += distances.getCost(currentTown, sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        followedRoute.add(sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+        nodes++;
+\end_layout
+
+\begin_layout Standard
+
+    }    
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+RoutesMatrix
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,language=Java,numbers=left"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * RoutesMatrix.java
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedDate: 2008-03-30 22:35:24 +0200 (dom, 30 mar 2008) $
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedRevision: 15 $
+\end_layout
+
+\begin_layout Standard
+
+ * Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ * < vicente@jdalmau.es >
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * This class defines all the distances between the cities in the problem.
+\end_layout
+
+\begin_layout Standard
+
+ * For two cities, x and y, the both distances x to y and y to x remain
+ the same.
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+package travelingsalesman;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+import java.awt.Color;
+\end_layout
+
+\begin_layout Standard
+
+import java.awt.Component;
+\end_layout
+
+\begin_layout Standard
+
+import java.util.Random;
+\end_layout
+
+\begin_layout Standard
+
+import javax.swing.JTable;
+\end_layout
+
+\begin_layout Standard
+
+import javax.swing.JTextField;
+\end_layout
+
+\begin_layout Standard
+
+import javax.swing.table.DefaultTableCellRenderer;
+\end_layout
+
+\begin_layout Standard
+
+import javax.swing.table.DefaultTableModel;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+/**
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * @author Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+public class RoutesMatrix {
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    private int[][] theMatrix;
+\end_layout
+
+\begin_layout Standard
+
+    private int cities;
+\end_layout
+
+\begin_layout Standard
+
+    // all the distance values will be in a Uniform(MAXDISTANCE)
+\end_layout
+
+\begin_layout Standard
+
+    private int MAXDISTANCE = 100;
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /** Creates a new instance of RoutesMatrix
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public RoutesMatrix(int cities) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        theMatrix = new int[cities][cities];
+\end_layout
+
+\begin_layout Standard
+
+        this.cities = cities;
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        // fill the matrix with random values
+\end_layout
+
+\begin_layout Standard
+
+        // a new random generator (seed based on the current time)
+\end_layout
+
+\begin_layout Standard
+
+        Random generator = new Random();
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        for (int i=0; i<cities; i++) {
+\end_layout
+
+\begin_layout Standard
+
+            for (int j=i; j<cities; j++) {
+\end_layout
+
+\begin_layout Standard
+
+                if (i == j)
+\end_layout
+
+\begin_layout Standard
+
+                    theMatrix[i][j] = 0;
+\end_layout
+
+\begin_layout Standard
+
+                else {
+\end_layout
+
+\begin_layout Standard
+
+                    theMatrix[i][j] = generator.nextInt(MAXDISTANCE);
+\end_layout
+
+\begin_layout Standard
+
+                    theMatrix[j][i] = theMatrix[i][j];
+\end_layout
+
+\begin_layout Standard
+
+                }
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+   
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * returns the number of cities
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public int getCitiesCount() {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        return cities;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * gets the cost of going from city "a" to city "b"
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public int getCost(int a, int b) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        return theMatrix[a][b];
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * sets the cost of going from city "a" to city "b"
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public void setCost(int a, int b, int cost) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        theMatrix[a][b] = cost;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * gets the array of costs as an Object[][] array.
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public Object[][] getCosts () {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        Object [][] array = new Object[cities][cities+1];
+\end_layout
+
+\begin_layout Standard
+
+        for (int i=0; i<cities; i++){
+\end_layout
+
+\begin_layout Standard
+
+            for (int j=0; j<cities; j++){
+\end_layout
+
+\begin_layout Standard
+
+                if (j == 0) {
+\end_layout
+
+\begin_layout Standard
+
+                    array[i][0] = i;
+\end_layout
+
+\begin_layout Standard
+
+                    array[i][j+1] = theMatrix[i][j];
+\end_layout
+
+\begin_layout Standard
+
+                }
+\end_layout
+
+\begin_layout Standard
+
+                else
+\end_layout
+
+\begin_layout Standard
+
+                    array[i][j+1] = theMatrix[i][j];
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+        return array;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * gets the cities in an Object[] array.
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public Object[] getCities () {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        Object[] array = new Object[cities+1];
+\end_layout
+
+\begin_layout Standard
+
+        for (int i=0; i<cities; i++) {
+\end_layout
+
+\begin_layout Standard
+
+            if (i == 0) {
+\end_layout
+
+\begin_layout Standard
+
+                array[i] = " ";
+\end_layout
+
+\begin_layout Standard
+
+                array[i+1] = 0;
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+            else
+\end_layout
+
+\begin_layout Standard
+
+                array[i+1] = i;
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+        return array;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * gets the maximum distance between two cities.
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public int getMaxDistance() {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        return MAXDISTANCE;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    public String toString() {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        String str = new String();
+\end_layout
+
+\begin_layout Standard
+
+        for (int i=0; i<cities; i++) {
+\end_layout
+
+\begin_layout Standard
+
+            for (int j=0; j<cities; j++) {
+\end_layout
+
+\begin_layout Standard
+
+                if (j == cities - 1)
+\end_layout
+
+\begin_layout Standard
+
+                    str += theMatrix[i][j] + "
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+                else
+\end_layout
+
+\begin_layout Standard
+
+                    str += theMatrix[i][j] + ", ";
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+        return str;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    // Redefine the behaviour of the table
+\end_layout
+
+\begin_layout Standard
+
+    public class MyRender extends DefaultTableCellRenderer {
+\end_layout
+
+\begin_layout Standard
+
+       public Component getTableCellRendererComponent(JTable table,
+\end_layout
+
+\begin_layout Standard
+
+          Object value,
+\end_layout
+
+\begin_layout Standard
+
+          boolean isSelected,
+\end_layout
+
+\begin_layout Standard
+
+          boolean hasFocus,
+\end_layout
+
+\begin_layout Standard
+
+          int row,
+\end_layout
+
+\begin_layout Standard
+
+          int column)
+\end_layout
+
+\begin_layout Standard
+
+       {
+\end_layout
+
+\begin_layout Standard
+
+          super.getTableCellRendererComponent (table, value, isSelected,
+ hasFocus, row, column);
+\end_layout
+
+\begin_layout Standard
+
+          this.setOpaque(true);
+\end_layout
+
+\begin_layout Standard
+
+          this.setToolTipText("");
+\end_layout
+
+\begin_layout Standard
+
+          if (column == 0) {
+\end_layout
+
+\begin_layout Standard
+
+                this.setBackground(Color.LIGHT_GRAY);
+\end_layout
+
+\begin_layout Standard
+
+                this.setHorizontalAlignment(JTextField.CENTER);
+\end_layout
+
+\begin_layout Standard
+
+          }
+\end_layout
+
+\begin_layout Standard
+
+          else if (column -1 == row) {
+\end_layout
+
+\begin_layout Standard
+
+                this.setBackground(Color.LIGHT_GRAY);
+\end_layout
+
+\begin_layout Standard
+
+          }
+\end_layout
+
+\begin_layout Standard
+
+          else {
+\end_layout
+
+\begin_layout Standard
+
+                this.setBackground(Color.WHITE);
+\end_layout
+
+\begin_layout Standard
+
+                this.setToolTipText("De la ciudad "+row+" a la "+(column-1));
+\end_layout
+
+\begin_layout Standard
+
+          }
+\end_layout
+
+\begin_layout Standard
+
+          return this;
+\end_layout
+
+\begin_layout Standard
+
+       }
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /** 
+\end_layout
+
+\begin_layout Standard
+
+     * Shows the content of the matrix in a JTable object.
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public void drawJTable (JTable j) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        DefaultTableModel dtm = new DefaultTableModel() {
+\end_layout
+
+\begin_layout Standard
+
+            public boolean isCellEditable(int row, int column) {
+\end_layout
+
+\begin_layout Standard
+
+                if (column != 0 && (column - 1 != row))
+\end_layout
+
+\begin_layout Standard
+
+                    return true;
+\end_layout
+
+\begin_layout Standard
+
+                else
+\end_layout
+
+\begin_layout Standard
+
+                    return false;
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        };
+\end_layout
+
+\begin_layout Standard
+
+        dtm.setDataVector(this.getCosts(), this.getCities());
+\end_layout
+
+\begin_layout Standard
+
+        // set the background of the first column
+\end_layout
+
+\begin_layout Standard
+
+        j.setModel(dtm);
+\end_layout
+
+\begin_layout Standard
+
+        j.setDefaultRenderer (Object.class, new MyRender());
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Town
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,language=Java,numbers=left"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * Town.java
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedDate: 2008-03-28 21:37:21 +0100 (vie, 28 mar 2008) $
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedRevision: 9 $
+\end_layout
+
+\begin_layout Standard
+
+ * Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ * < vicente@jdalmau.es >
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * Contains all the important information about a Town.
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+package travelingsalesman;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+/**
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * @author Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+public class Town {
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    public int number;
+\end_layout
+
+\begin_layout Standard
+
+    public int f, g, h;
+\end_layout
+
+\begin_layout Standard
+
+    public int level;
+\end_layout
+
+\begin_layout Standard
+
+    public Town parent = null;
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /** Creates a new instance of Town */
+\end_layout
+
+\begin_layout Standard
+
+    public Town(int number, int g, int h, int level) {
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+        this.number = number;
+\end_layout
+
+\begin_layout Standard
+
+        this.g = g;
+\end_layout
+
+\begin_layout Standard
+
+        this.h = h;
+\end_layout
+
+\begin_layout Standard
+
+        this.f = this.g + this.h;
+\end_layout
+
+\begin_layout Standard
+
+        this.level = level;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+UniformCost
+\end_layout
+
+\begin_layout Standard
+\begin_inset listings
+lstparams "breaklines=true,language=Java,numbers=left"
+inline false
+status collapsed
+
+\begin_layout Standard
+
+/*
+\end_layout
+
+\begin_layout Standard
+
+ * UniformCost.java
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedDate: 2008-03-30 20:41:41 +0200 (dom, 30 mar 2008) $
+\end_layout
+
+\begin_layout Standard
+
+ * $LastChangedRevision: 14 $
+\end_layout
+
+\begin_layout Standard
+
+ * Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ * < vicente@jdalmau.es >
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * Implementation of the Uniform Cost algorithm.
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+package travelingsalesman;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+import java.util.ArrayList;
+\end_layout
+
+\begin_layout Standard
+
+import java.util.Comparator;
+\end_layout
+
+\begin_layout Standard
+
+import java.util.PriorityQueue;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+/**
+\end_layout
+
+\begin_layout Standard
+
+ *
+\end_layout
+
+\begin_layout Standard
+
+ * @author Vicente J.
+ Ferrer Dalmau
+\end_layout
+
+\begin_layout Standard
+
+ */
+\end_layout
+
+\begin_layout Standard
+
+public class UniformCost {
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    RoutesMatrix distances;
+\end_layout
+
+\begin_layout Standard
+
+    int sourceCity;
+\end_layout
+
+\begin_layout Standard
+
+    PriorityQueue<Town> toExpand = new PriorityQueue<Town>(200, 
+\end_layout
+
+\begin_layout Standard
+
+        new Comparator<Town>() {
+\end_layout
+
+\begin_layout Standard
+
+          public int compare(Town a, Town b) {
+\end_layout
+
+\begin_layout Standard
+
+            return a.g - b.g;
+\end_layout
+
+\begin_layout Standard
+
+          }
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+      );  
+\end_layout
+
+\begin_layout Standard
+
+    String result = new String();
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    ArrayList optimumRoute, followedRoute;
+\end_layout
+
+\begin_layout Standard
+
+    int nodes = 0;
+\end_layout
+
+\begin_layout Standard
+
+    int routeCost = 0;
+\end_layout
+
+\begin_layout Standard
+
+    int optimumCost = Integer.MAX_VALUE;      
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /** Creates a new instance of UniformCost */
+\end_layout
+
+\begin_layout Standard
+
+    public UniformCost(RoutesMatrix matrix, int sourceCity) {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        distances = matrix;
+\end_layout
+
+\begin_layout Standard
+
+        this.sourceCity = sourceCity;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+    /**
+\end_layout
+
+\begin_layout Standard
+
+     * executes the algorithm
+\end_layout
+
+\begin_layout Standard
+
+     */
+\end_layout
+
+\begin_layout Standard
+
+    public String execute() {
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        // have we found the solution?
+\end_layout
+
+\begin_layout Standard
+
+        boolean solution = false;
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        // start the timer
+\end_layout
+
+\begin_layout Standard
+
+        long startTime = System.currentTimeMillis();
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        // initial town
+\end_layout
+
+\begin_layout Standard
+
+        toExpand.add(new Town(sourceCity, 0, 0, 0));
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        while (!toExpand.isEmpty() && !solution) {
+\end_layout
+
+\begin_layout Standard
+
+            // gets the city with lower g value
+\end_layout
+
+\begin_layout Standard
+
+            Town currentTown = toExpand.poll();
+\end_layout
+
+\begin_layout Standard
+
+            nodes++;
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+            // rebuild the followed route for the selected town
+\end_layout
+
+\begin_layout Standard
+
+            Town aux = currentTown;
+\end_layout
+
+\begin_layout Standard
+
+            followedRoute = new ArrayList();
+\end_layout
+
+\begin_layout Standard
+
+            followedRoute.add(aux.number);
+\end_layout
+
+\begin_layout Standard
+
+            while (aux.level != 0) {
+\end_layout
+
+\begin_layout Standard
+
+                aux = aux.parent;
+\end_layout
+
+\begin_layout Standard
+
+                followedRoute.add(0, aux.number);
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+            
+\end_layout
+
+\begin_layout Standard
+
+            if (currentTown.level == distances.getCitiesCount()) {
+\end_layout
+
+\begin_layout Standard
+
+                solution = true;
+\end_layout
+
+\begin_layout Standard
+
+                optimumRoute = followedRoute;
+\end_layout
+
+\begin_layout Standard
+
+                optimumCost = currentTown.g;
+\end_layout
+
+\begin_layout Standard
+
+            } else {
+\end_layout
+
+\begin_layout Standard
+
+                
+\end_layout
+
+\begin_layout Standard
+
+                for (int i=0; i<distances.getCitiesCount(); i++) {
+\end_layout
+
+\begin_layout Standard
+
+                    // have we visited this city in the current followed
+ route?
+\end_layout
+
+\begin_layout Standard
+
+                    boolean visited = followedRoute.contains(i);
+\end_layout
+
+\begin_layout Standard
+
+                    boolean isSolution = (followedRoute.size() == distances.getCit
+iesCount())&&(i == sourceCity);
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\begin_layout Standard
+
+                    if (!visited || isSolution) {
+\end_layout
+
+\begin_layout Standard
+
+                        Town childTown = new Town(i, currentTown.g + distances.get
+Cost(currentTown.number, i), 0, currentTown.level + 1);
+\end_layout
+
+\begin_layout Standard
+
+                        childTown.parent = currentTown;
+\end_layout
+
+\begin_layout Standard
+
+                        toExpand.add(childTown);  
+\end_layout
+
+\begin_layout Standard
+
+                    }
+\end_layout
+
+\begin_layout Standard
+
+                }                
+\end_layout
+
+\begin_layout Standard
+
+            }
+\end_layout
+
+\begin_layout Standard
+
+        }
+\end_layout
+
+\begin_layout Standard
+
+        long endTime = System.currentTimeMillis();        
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        result = "-------------------------------------
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result +=  "BÚSQUEDA DE COSTO UNIFORME:
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "-------------------------------------
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "MEJOR SOLUCIÓN: 
+\backslash
+t"+optimumRoute.toString() + "
+\backslash
+nCOSTE: 
+\backslash
+t
+\backslash
+t"+optimumCost+"
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "NODOS VISITADOS: 
+\backslash
+t"+nodes+"
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "TIEMPO TRANSCURRIDO: 
+\backslash
+t"+(endTime-startTime)+" ms
+\backslash
+n";
+\end_layout
+
+\begin_layout Standard
+
+        result += "-------------------------------------
+\backslash
+n";        
+\end_layout
+
+\begin_layout Standard
+
+        
+\end_layout
+
+\begin_layout Standard
+
+        return result;
+\end_layout
+
+\begin_layout Standard
+
+    }
+\end_layout
+
+\begin_layout Standard
+
+    
+\end_layout
+
+\begin_layout Standard
+
+}
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body
